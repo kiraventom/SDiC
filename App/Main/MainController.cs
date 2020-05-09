@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace SDiC
 {
@@ -17,7 +17,9 @@ namespace SDiC
             Model = model;
 
             View.SignOut += this.View_SignOut;
+            (View as Window).Closed += this.MainController_Closed;
         }
+
 
         IView IController.View => View as IView;
         IModel IController.Model => Model as IModel;
@@ -35,11 +37,16 @@ namespace SDiC
             bool shouldSignOut = View.ConfirmSigningOut();
             if (shouldSignOut)
             {
-                FormClosing.Invoke(this, new Common.FormClosingEventArgs(Common.FormClosingEventArgs.CloseReason.Abort));
+                WindowClosing.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Abort));
             }
         }
 
-        public event EventHandler<Common.FormClosingEventArgs> FormClosing;
+        private void MainController_Closed(object sender, EventArgs e) 
+        {
+            WindowClosing.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Success));
+        }
+
+        public event EventHandler<WindowClosingEventArgs> WindowClosing;
 
         public void Show()
         {
