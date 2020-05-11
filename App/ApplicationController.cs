@@ -17,18 +17,18 @@ namespace SDiC
         public ApplicationController()
         {
             AuthController = new AuthorizationController(new AuthorizationView(), new AuthorizationModel());
-            AuthController.WindowClosing += this.AuthController_FormClosing;
+            AuthController.WindowClosed += this.AuthController_WindowClosed;
             MainController = new MainController(new MainView(), new MainModel());
-            MainController.WindowClosing += this.MainController_FormClosing;
+            MainController.WindowClosed += this.MainController_WindowClosing;
         }
 
-        private void AuthController_FormClosing(object sender, Common.WindowClosingEventArgs e)
+        private void AuthController_WindowClosed(object sender, WindowClosingEventArgs e)
         {
             switch (e.Reason)
             {
                 case WindowClosingEventArgs.CloseReason.Success: // sign in
                     AuthController.Close();
-                    (MainController as IMainController).Login = (e.Data as Credentials).Login;
+                    (MainController as IMainController).CurrentUser = e.Data as Database.User;
                     MainController.Show();
                     break;
 
@@ -41,7 +41,7 @@ namespace SDiC
             }
         }
 
-        private void MainController_FormClosing(object sender, Common.WindowClosingEventArgs e)
+        private void MainController_WindowClosing(object sender, Common.WindowClosingEventArgs e)
         {
             switch (e.Reason)
             {

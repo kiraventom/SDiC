@@ -20,16 +20,24 @@ namespace SDiC
             (View as Window).Closed += this.MainController_Closed;
         }
 
-
         IView IController.View => View as IView;
         IModel IController.Model => Model as IModel;
 
         public IMainView View;
         public IMainModel Model;
 
-        public string Login 
-        { 
-            set => View.Login = value;
+        public Database.User CurrentUser
+        {
+            set
+            {
+                View.Type = (value.Type.Trim().ToLower()) switch
+                {
+                    "user" => "исследователь",
+                    "admin" => "администратор",
+                    _ => throw new NotImplementedException($"Unknown user type \"{value.Type}\""),
+                };
+                Model.CurrentUser = value;
+            }
         }
 
         private void View_SignOut(object sender, EventArgs e)
@@ -37,21 +45,18 @@ namespace SDiC
             bool shouldSignOut = View.ConfirmSigningOut();
             if (shouldSignOut)
             {
-                WindowClosing.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Abort));
+                WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Abort));
             }
         }
 
         private void MainController_Closed(object sender, EventArgs e) 
         {
-            WindowClosing.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Success));
+            WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Success));
         }
 
-        public event EventHandler<WindowClosingEventArgs> WindowClosing;
+        public event EventHandler<WindowClosingEventArgs> WindowClosed;
 
-        public void Show()
-        {
-            View.Show();
-        }
+        public void Show() => View.Show();
 
         public void Close() => View.Hide();
     }

@@ -41,9 +41,9 @@ namespace Application.Authorization
             {
                 string login = LoginTB.Text;
                 string passwordHash = Hasher.GetHash(PasswordTB.Password);
-                SuccessfulLogin.Invoke(this, new LoginEventArgs(new Credentials(login, passwordHash)));
                 LoginTB.Clear();
                 PasswordTB.Clear();
+                SuccessfulLogin.Invoke(this, new LoginEventArgs(new Credentials(login, passwordHash)));
             }
             else
             {

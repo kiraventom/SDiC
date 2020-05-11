@@ -40,14 +40,11 @@ namespace Application
         public event EventHandler SignOut;
 
         const string greeting = "Здравствуйте, ";
-        private string login;
-        public string Login
+        public string Type
         {
-            get => login;
             set
             {
-                login = value;
-                GreetingsL.Content = greeting + login;
+                GreetingsL.Content = greeting + value;
             }
         }
     }

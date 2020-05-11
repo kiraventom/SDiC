@@ -26,22 +26,24 @@ namespace SDiC
 
         public IAuthorizationView View { get; }
         public IAuthorizationModel Model { get; }
-        public event EventHandler<WindowClosingEventArgs> WindowClosing;
+        public event EventHandler<WindowClosingEventArgs> WindowClosed;
+        private Database.User AuthorizedUser = null;
 
         public void View_LoginAttempt(object sender, LoginEventArgs e)
         {
-            bool isLoginSuccessful = Model.Login(e.Credentials);
+            AuthorizedUser = Model.Login(e.Credentials);
+            bool isLoginSuccessful = AuthorizedUser != null;
             View.LoginAttemptResult(isLoginSuccessful);
         }
 
         public void View_SuccessfulLogin(object sender, LoginEventArgs e)
         {
-            WindowClosing.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Success, e.Credentials));
+            WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Success, AuthorizedUser));
         }
 
         private void AuthorizationController_Closed(object sender, EventArgs e)
         {
-            WindowClosing.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Abort));
+            WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Abort));
         }
 
         public void Show() => View.Show();

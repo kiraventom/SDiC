@@ -9,6 +9,6 @@ namespace SDiC.Main.Interfaces
 {
     public interface IMainModel : IModel
     {
-
+        Database.User CurrentUser { get; set; }
     }
 }

@@ -9,24 +9,17 @@ namespace SDiC
 {
     class AuthorizationModel : IAuthorizationModel
     {
-        public bool Login(Credentials credentials)
+        public Database.User Login(Credentials credentials)
         {
-            bool loginSuccessfull;
+            Database.User user = null;
             using (var db = new Database.UsersContext())
             {
-                var user = db.Users
+                user = db.Users
                     .AsEnumerable()
-                    .SingleOrDefault(u => u.Login.Equals(credentials.Login, StringComparison.OrdinalIgnoreCase));
-                if (user != null)
-                {
-                    loginSuccessfull = user.PasswordHash.Equals(credentials.PasswordHash, StringComparison.OrdinalIgnoreCase);
-                }
-                else
-                {
-                    loginSuccessfull = false;
-                }
+                    .FirstOrDefault(u => credentials.Equals(u));
             }
-            return loginSuccessfull;
+
+            return user;
         }
     }
 }

@@ -9,6 +9,6 @@ namespace SDiC.Main.Interfaces
 {
     public interface IMainController : IController
     {
-        string Login { set; }
+         Database.User CurrentUser { set; }
     }
 }

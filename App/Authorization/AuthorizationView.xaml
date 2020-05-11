@@ -11,6 +11,6 @@
         <TextBox x:Name="LoginTB" Width="200" HorizontalAlignment="Left" Margin="5, 0, 0, 0"/>
         <Label Content="Пароль" Margin="5, 0, 0, 0"/>
         <PasswordBox x:Name="PasswordTB" Width="200" HorizontalAlignment="Left" Margin="5, 0, 0, 0"/>
-        <Button x:Name="LoginBt" Content="Войти" Width="100" HorizontalAlignment="Left" Margin="5, 20, 0, 0" Click="LoginBt_Click"/>
+        <Button x:Name="LoginBt" Content="Войти" Width="100" HorizontalAlignment="Left" Margin="5, 20, 0, 0" Click="LoginBt_Click" IsDefault="True"/>
     </StackPanel>
 </Window>

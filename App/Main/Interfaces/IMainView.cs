@@ -10,7 +10,7 @@ namespace SDiC.Main.Interfaces
     public interface IMainView : IView
     {
         event EventHandler SignOut;
-        string Login { get; set; }
+        string Type { set; }
         bool ConfirmSigningOut();
     }
 }

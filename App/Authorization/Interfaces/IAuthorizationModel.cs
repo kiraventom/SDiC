@@ -9,6 +9,6 @@ namespace SDiC.Authorization.Interfaces
 {
     public interface IAuthorizationModel : IModel
     {
-        bool Login(Credentials credentials);
+        Database.User Login(Credentials credentials);
     }
 }

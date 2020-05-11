@@ -10,6 +10,6 @@ namespace SDiC
 {
     public class MainModel : IMainModel
     {
-
+        public Database.User CurrentUser { get; set; }
     }
 }
