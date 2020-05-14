@@ -30,14 +30,15 @@ namespace Application.Authorization
 
         private void LoginBt_Click(object sender, EventArgs e)
         {
-            string login = LoginTB.Text;
-            string passwordHash = Hasher.GetHash(PasswordTB.Password);
+            // TODO: move data wrapping to controller
+            string login = LoginTB.Text.ToLower().Trim();
+            string passwordHash = Hasher.GetHash(PasswordTB.Password.Trim());
             LoginAttempt.Invoke(this, new LoginEventArgs(new Credentials(login, passwordHash)));
         }
 
-        public void LoginAttemptResult(bool credentialsOK)
+        public void ReactToLoginAttempt(bool loginSuccessful)
         {
-            if (credentialsOK)
+            if (loginSuccessful)
             {
                 string login = LoginTB.Text;
                 string passwordHash = Hasher.GetHash(PasswordTB.Password);

@@ -1,7 +1,10 @@
-﻿using SDiC.Common;
+﻿using App.Main.DbEdit;
+using App.Main.DbEdit.Interfaces;
+using SDiC.Common;
 using SDiC.Main.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,25 +20,33 @@ namespace SDiC
             Model = model;
 
             View.SignOut += this.View_SignOut;
-            (View as Window).Closed += this.MainController_Closed;
+            View.EditDb += this.View_EditDb;
+            (View as Window).Closed += this.MainView_Closed;
         }
 
         IView IController.View => View as IView;
         IModel IController.Model => Model as IModel;
 
-        public IMainView View;
-        public IMainModel Model;
+        private readonly IMainView View;
+        private readonly IMainModel Model;
 
         public Database.User CurrentUser
         {
             set
             {
-                View.Type = (value.Type.Trim().ToLower()) switch
+                switch (value.Type.Trim().ToLower())
                 {
-                    "user" => "исследователь",
-                    "admin" => "администратор",
-                    _ => throw new NotImplementedException($"Unknown user type \"{value.Type}\""),
-                };
+                    case "user":
+                        View.Name = "исследователь";
+                        View.IsEditDbBtVisible = false;
+                        break;
+                    case "admin":
+                        View.Name = "администратор";
+                        View.IsEditDbBtVisible = true;
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unknown user type \"{value.Type}\"");
+                }
                 Model.CurrentUser = value;
             }
         }
@@ -45,19 +56,25 @@ namespace SDiC
             bool shouldSignOut = View.ConfirmSigningOut();
             if (shouldSignOut)
             {
-                WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Abort));
+                ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Abort));
             }
         }
 
-        private void MainController_Closed(object sender, EventArgs e) 
+        private void View_EditDb(object sender, EventArgs e)
         {
-            WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Success));
+            IDbEditController dbEditController = new DbEditController(new DbEditView(), new DbEditModel());
+            dbEditController.ControllerClosed += (sender, ea) => { };
+            dbEditController.Show();
         }
 
-        public event EventHandler<WindowClosingEventArgs> WindowClosed;
+        private void MainView_Closed(object sender, EventArgs e) 
+        {
+            ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success));
+        }
+
+        public event EventHandler<ControllerClosedEventArgs> ControllerClosed;
 
         public void Show() => View.Show();
-
         public void Close() => View.Hide();
     }
 }

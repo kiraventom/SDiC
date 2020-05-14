@@ -18,32 +18,33 @@ namespace SDiC
 
             View.LoginAttempt += this.View_LoginAttempt;
             View.SuccessfulLogin += this.View_SuccessfulLogin;
-            (View as Window).Closed += this.AuthorizationController_Closed;
+            (View as Window).Closed += this.AuthorizationView_Closed;
         }
 
         IView IController.View => View as IView;
         IModel IController.Model => Model as IModel;
 
-        public IAuthorizationView View { get; }
-        public IAuthorizationModel Model { get; }
-        public event EventHandler<WindowClosingEventArgs> WindowClosed;
+        private readonly IAuthorizationView View;
+        private readonly IAuthorizationModel Model;
+
+        public event EventHandler<ControllerClosedEventArgs> ControllerClosed;
         private Database.User AuthorizedUser = null;
 
         public void View_LoginAttempt(object sender, LoginEventArgs e)
         {
             AuthorizedUser = Model.Login(e.Credentials);
             bool isLoginSuccessful = AuthorizedUser != null;
-            View.LoginAttemptResult(isLoginSuccessful);
+            View.ReactToLoginAttempt(isLoginSuccessful);
         }
 
         public void View_SuccessfulLogin(object sender, LoginEventArgs e)
         {
-            WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Success, AuthorizedUser));
+            ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success, AuthorizedUser));
         }
 
-        private void AuthorizationController_Closed(object sender, EventArgs e)
+        private void AuthorizationView_Closed(object sender, EventArgs e)
         {
-            WindowClosed.Invoke(this, new WindowClosingEventArgs(WindowClosingEventArgs.CloseReason.Abort));
+            ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Abort));
         }
 
         public void Show() => View.Show();

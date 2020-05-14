@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SDiC.Common
 {
@@ -10,5 +11,7 @@ namespace SDiC.Common
     {
         void Show();
         void Hide();
+        bool? ShowDialog();
+        void Close();
     }
 }

@@ -11,6 +11,6 @@ namespace SDiC.Authorization.Interfaces
     {
         event EventHandler<LoginEventArgs> LoginAttempt;
         event EventHandler<LoginEventArgs> SuccessfulLogin;
-        void LoginAttemptResult(bool credentialsOK);
+        void ReactToLoginAttempt(bool credentialsOK);
     }
 }

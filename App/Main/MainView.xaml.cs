@@ -28,6 +28,11 @@ namespace Application
             SignOut.Invoke(this, EventArgs.Empty);
         }
 
+        private void EditDbBt_Click(object sender, RoutedEventArgs e)
+        {
+            EditDb.Invoke(this, EventArgs.Empty);
+        }
+
         public bool ConfirmSigningOut()
         {
             var mbr = MessageBox.Show("Вы действительно хотите выйти из аккаунта?",
@@ -38,13 +43,22 @@ namespace Application
         }
 
         public event EventHandler SignOut;
+        public event EventHandler EditDb;
 
         const string greeting = "Здравствуйте, ";
-        public string Type
+        public string Name
         {
             set
             {
                 GreetingsL.Content = greeting + value;
+            }
+        }
+
+        public bool IsEditDbBtVisible
+        {
+            set
+            {
+                EditDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
             }
         }
     }

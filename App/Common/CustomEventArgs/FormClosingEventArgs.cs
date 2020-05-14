@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace SDiC.Common
 {
-    public class WindowClosingEventArgs : EventArgs
+    public class ControllerClosedEventArgs : EventArgs
     {
-        public WindowClosingEventArgs(CloseReason closeReason)
+        public ControllerClosedEventArgs(CloseReason closeReason)
         {
             Reason = closeReason;
             Data = null;
         }
 
-        public WindowClosingEventArgs(CloseReason closeReason, object data)
+        public ControllerClosedEventArgs(CloseReason closeReason, object data)
         {
             Reason = closeReason;
             Data = data;

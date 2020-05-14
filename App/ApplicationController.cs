@@ -17,22 +17,22 @@ namespace SDiC
         public ApplicationController()
         {
             AuthController = new AuthorizationController(new AuthorizationView(), new AuthorizationModel());
-            AuthController.WindowClosed += this.AuthController_WindowClosed;
+            AuthController.ControllerClosed += this.AuthController_ControllerClosed;
             MainController = new MainController(new MainView(), new MainModel());
-            MainController.WindowClosed += this.MainController_WindowClosing;
+            MainController.ControllerClosed += this.MainController_ControllerClosed;
         }
 
-        private void AuthController_WindowClosed(object sender, WindowClosingEventArgs e)
+        private void AuthController_ControllerClosed(object sender, ControllerClosedEventArgs e)
         {
             switch (e.Reason)
             {
-                case WindowClosingEventArgs.CloseReason.Success: // sign in
+                case ControllerClosedEventArgs.CloseReason.Success: // sign in
                     AuthController.Close();
                     (MainController as IMainController).CurrentUser = e.Data as Database.User;
                     MainController.Show();
                     break;
 
-                case WindowClosingEventArgs.CloseReason.Abort:
+                case ControllerClosedEventArgs.CloseReason.Abort:
                     this.Stop();
                     break;
 
@@ -41,16 +41,16 @@ namespace SDiC
             }
         }
 
-        private void MainController_WindowClosing(object sender, Common.WindowClosingEventArgs e)
+        private void MainController_ControllerClosed(object sender, ControllerClosedEventArgs e)
         {
             switch (e.Reason)
             {
-                case WindowClosingEventArgs.CloseReason.Abort: // sign out
+                case ControllerClosedEventArgs.CloseReason.Abort: // sign out
                     MainController.Close();
                     AuthController.Show();
                     break;
 
-                case WindowClosingEventArgs.CloseReason.Success:
+                case ControllerClosedEventArgs.CloseReason.Success:
                     this.Stop();
                     break;
 

@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         Title="Приложение" Height="450" Width="800" WindowStartupLocation="CenterScreen" MinWidth="380" MinHeight="200">
     <Grid>
-        <Button x:Name="SignOutBt" Content="Выйти из аккаунта" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="25" Width="137" UseLayoutRounding="False" Click="SignOutBt_Click"/>
-        <Label x:Name="GreetingsL" Content="Label" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="24"/>
+        <Button x:Name="SignOutBt" Content="Выйти из аккаунта" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="25" Width="137" Click="SignOutBt_Click"/>
+        <Label x:Name="GreetingsL" Content="Value" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="24"/>
+        <Button x:Name="EditDbBt" Content="Редактировать БД" HorizontalAlignment="Right" Margin="0,10,152,0" VerticalAlignment="Top" Height="25" Width="137" Click="EditDbBt_Click"/>
 
     </Grid>
 </Window>

@@ -12,6 +12,6 @@ namespace SDiC.Common
         void Close();
         IView View { get; }
         IModel Model { get; }
-        event EventHandler<WindowClosingEventArgs> WindowClosed;
+        event EventHandler<ControllerClosedEventArgs> ControllerClosed;
     }
 }

@@ -10,7 +10,9 @@ namespace SDiC.Main.Interfaces
     public interface IMainView : IView
     {
         event EventHandler SignOut;
-        string Type { set; }
+        event EventHandler EditDb;
+        string Name { set; }
         bool ConfirmSigningOut();
+        bool IsEditDbBtVisible { set; }
     }
 }
