@@ -18,7 +18,7 @@ namespace SDiC
                     .FirstOrDefault(u => credentials.Equals(u));
             }
 
-            return AuthorizedUser is null;
+            return AuthorizedUser != null;
         }
 
         public Database.User AuthorizedUser { get; private set; } = null;
