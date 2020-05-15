@@ -18,35 +18,19 @@ namespace App.Main.DbEdit
         {
             View = view;
             Model = model;
-            Users = new ObservableCollection<Database.User>(Model.ReadAll());
-            Users.CollectionChanged += this.Users_CollectionChanged;
+            Users = Model.ReadAll();
             (View as Window).Loaded += this.DbEditView_Loaded;
             (View as Window).Closing += this.DbEditView_Closing;
             View.AddUserRequest += this.View_AddUserRequest;
-            View.UpdateDbRequest += this.View_UpdateDbRequest;
-        }
-
-        private void Users_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) 
-        { 
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Remove:
-                    Model.Remove(e.OldItems[0] as Database.User);
-                    break;
-                default:
-                    return;
-            }
         }
 
         readonly ObservableCollection<Database.User> Users;
 
         private void View_AddUserRequest(object sender, EventArgs e)
         {
-            var logins =
-                from user in Model.ReadAll()
-                select user.Login;
+            var logins = Users.Select(u => u.Login);
             IAddEntityController addEntityController 
-                = new AddEntityController(new AddEntityView(), new AddEntityModel(), logins);
+                = new AddEntityController(new AddEntityView(), new AddEntityModel(logins));
             addEntityController.ControllerClosed += (sender, ea) =>
             {
                 if (ea.Reason == ControllerClosedEventArgs.CloseReason.Success
@@ -54,16 +38,10 @@ namespace App.Main.DbEdit
                 {
                     var user = ea.Data as Database.User;
                     Users.Add(user);
-                    Model.Add(user);
                     addEntityController.Close();
                 }
             };
             addEntityController.Show();
-        }
-
-        private void View_UpdateDbRequest(object sender, EventArgs e)
-        {
-            Model.Save();
         }
 
         private void DbEditView_Loaded(object sender, RoutedEventArgs e)

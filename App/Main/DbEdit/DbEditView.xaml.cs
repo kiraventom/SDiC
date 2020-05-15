@@ -55,11 +55,5 @@ namespace App.Main.DbEdit
         }
 
         public event EventHandler AddUserRequest;
-        public event EventHandler UpdateDbRequest;
-
-        private void UpdateBt_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateDbRequest.Invoke(this, EventArgs.Empty);
-        }
     }
 }

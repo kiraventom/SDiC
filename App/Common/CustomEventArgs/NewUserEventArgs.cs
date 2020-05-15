@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDiC.Authorization.Other;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,9 +7,9 @@ namespace App.Common.CustomEventArgs
 {
     public class NewUserEventArgs : EventArgs
     {
-        public NewUserEventArgs(Database.User user)
+        public NewUserEventArgs(string login, string password, int level)
         {
-            NewUser = user;
+            NewUser = new Database.User() { Login = login, PasswordHash = Hasher.GetHash(password), Level = level };
         }
 
         public Database.User NewUser { get; }

@@ -10,7 +10,6 @@
         <DataGrid x:Name="MainDG" SelectionMode="Single" CanUserReorderColumns="False" CanUserSortColumns="False" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="False" Margin="0,0,0,5" Height="336" CanUserAddRows="False"/>
         <StackPanel Orientation="Horizontal">
             <Button x:Name="AddUserBt" Content="Добавить пользователя" Width="150" HorizontalAlignment="Left" Margin="5, 0, 0, 0" Click="AddUserBt_Click"/>
-            <Button x:Name="UpdateBt" Content="Отправить данные в БД" Width="150" HorizontalAlignment="Left" Margin="5, 0, 0, 0" Click="UpdateBt_Click"/>
         </StackPanel>
         
     </StackPanel>

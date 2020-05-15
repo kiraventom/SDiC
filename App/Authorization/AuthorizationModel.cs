@@ -9,17 +9,18 @@ namespace SDiC
 {
     class AuthorizationModel : IAuthorizationModel
     {
-        public Database.User Login(Credentials credentials)
+        public bool Login(Credentials credentials)
         {
-            Database.User user = null;
             using (var db = new Database.UsersContext())
             {
-                user = db.Users
+                AuthorizedUser = db.Users
                     .AsEnumerable()
                     .FirstOrDefault(u => credentials.Equals(u));
             }
 
-            return user;
+            return AuthorizedUser is null;
         }
+
+        public Database.User AuthorizedUser { get; private set; } = null;
     }
 }

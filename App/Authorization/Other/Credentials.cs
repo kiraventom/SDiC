@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDiC.Authorization.Other;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,10 @@ namespace SDiC
 {
     public class Credentials
     {
-        public Credentials(string login, string passwordHash)
+        public Credentials(string login, string password)
         {
             Login = login;
-            PasswordHash = passwordHash;
+            PasswordHash = Hasher.GetHash(password);
         }
 
         public string Login { get; }

@@ -28,18 +28,16 @@ namespace SDiC
         private readonly IAuthorizationModel Model;
 
         public event EventHandler<ControllerClosedEventArgs> ControllerClosed;
-        private Database.User AuthorizedUser = null;
 
         public void View_LoginAttempt(object sender, LoginEventArgs e)
         {
-            AuthorizedUser = Model.Login(e.Credentials);
-            bool isLoginSuccessful = AuthorizedUser != null;
+            bool isLoginSuccessful = Model.Login(e.Credentials);
             View.ReactToLoginAttempt(isLoginSuccessful);
         }
 
         public void View_SuccessfulLogin(object sender, LoginEventArgs e)
         {
-            ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success, AuthorizedUser));
+            ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success, Model.AuthorizedUser));
         }
 
         private void AuthorizationView_Closed(object sender, EventArgs e)

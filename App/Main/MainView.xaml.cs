@@ -45,12 +45,12 @@ namespace Application
         public event EventHandler SignOut;
         public event EventHandler EditDb;
 
-        const string greeting = "Здравствуйте, ";
-        public string Name
+        const string greetingStart = "Здравствуйте, ";
+        public string Greeting
         {
             set
             {
-                GreetingsL.Content = greeting + value;
+                GreetingsL.Content = greetingStart + value;
             }
         }
 

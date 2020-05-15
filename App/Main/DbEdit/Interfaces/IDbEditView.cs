@@ -10,7 +10,6 @@ namespace App.Main.DbEdit.Interfaces
         IEnumerable<Database.User> Source { set; }
 
         event EventHandler AddUserRequest;
-        event EventHandler UpdateDbRequest;
 
         bool? ConfirmChanges();
     }

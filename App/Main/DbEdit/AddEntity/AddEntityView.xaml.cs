@@ -24,12 +24,10 @@ namespace App.Main.DbEdit
 
         private void AddBt_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: fix type handling, move data wrapping to controller
             string login = LoginTB.Text.ToLower().Trim();
-            string passwordHash = Hasher.GetHash(PasswordTB.Password.Trim());
-            string type = TypeCB.SelectedIndex == 0 ? "admin" : "user";
-            var user = new Database.User() { Login = login, PasswordHash = passwordHash, Type = type };
-            this.AddUserAttempt.Invoke(this, new NewUserEventArgs(user));
+            string password = PasswordTB.Password.Trim();
+            int level = TypeCB.SelectedIndex;
+            this.AddUserAttempt.Invoke(this, new NewUserEventArgs(login, password, level));
         }
 
         public event EventHandler<NewUserEventArgs> AddUserAttempt;

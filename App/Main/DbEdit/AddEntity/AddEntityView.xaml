@@ -12,9 +12,9 @@
         <Label Content="Пароль" Margin="5, 0, 0, 0"/>
         <PasswordBox x:Name="PasswordTB" Width="200" HorizontalAlignment="Left" Margin="5, 0, 0, 0"/>
         <Label Content="Тип" Margin="5, 0, 0, 0"/>
-        <ComboBox x:Name="TypeCB" Width="200" HorizontalAlignment="Left" Margin="5, 0, 0, 0" IsEditable="false" IsReadOnly="true" SelectedIndex="1">
-            <ComboBoxItem x:Name="AdminCBI">Администратор</ComboBoxItem>
+        <ComboBox x:Name="TypeCB" Width="200" HorizontalAlignment="Left" Margin="5, 0, 0, 0" IsEditable="false" IsReadOnly="true" SelectedIndex="0">
             <ComboBoxItem x:Name="UserCBI">Пользователь</ComboBoxItem>
+            <ComboBoxItem x:Name="AdminCBI">Администратор</ComboBoxItem>
         </ComboBox>
         <Button x:Name="AddBt" Content="Добавить" Width="100" HorizontalAlignment="Left" Margin="5, 20, 0, 0" IsDefault="True" Click="AddBt_Click"/>
     </StackPanel>

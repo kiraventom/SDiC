@@ -10,16 +10,13 @@ namespace App.Main.DbEdit.AddEntity
 {
     public class AddEntityController : IAddEntityController
     {
-        public AddEntityController(IAddEntityView view, IAddEntityModel model, IEnumerable<string> logins)
+        public AddEntityController(IAddEntityView view, IAddEntityModel model)
         {
             View = view;
             Model = model;
-            Logins = logins.ToList();
             (View as Window).Closing += this.AddEntityView_Closing;
             View.AddUserAttempt += this.View_AddUserAttempt;
         }
-
-        private readonly IReadOnlyCollection<string> Logins;
 
         IView IController.View => View as IView;
         IModel IController.Model => Model as IModel;
@@ -31,29 +28,27 @@ namespace App.Main.DbEdit.AddEntity
 
         private void View_AddUserAttempt(object sender, Common.CustomEventArgs.NewUserEventArgs e)
         {
-            // TODO: Move error handling to model
-            if (string.IsNullOrWhiteSpace(e.NewUser.Login))
+            switch (Model.CheckNewUser(e.NewUser))
             {
-                View.ShowErrorMessageBox("Логин не может быть пустым или состоять из пробелов");
-            }
-            else
-            if (Logins.Any(login => login.Equals(e.NewUser.Login, StringComparison.OrdinalIgnoreCase)))
-            {
-                View.ShowErrorMessageBox("Аккаунт с таким логином уже существует");
-            }
-            else
-            if (string.IsNullOrWhiteSpace(e.NewUser.PasswordHash))
-            {
-                View.ShowErrorMessageBox("Пароль не может быть пустым или состоять из пробелов");
-            }
-            else
-            if (string.IsNullOrWhiteSpace(e.NewUser.Type))
-            {
-                View.ShowErrorMessageBox("Тип не может быть пустым или состоять из пробелов");
-            }
-            else // все данные в порядке, можно добавлять аккаунт
-            {
-                ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success, e.NewUser));
+                case AddEntityModel.Error.EmptyLogin:
+                    View.ShowErrorMessageBox("Логин не может быть пустым или состоять из пробелов");
+                    break;
+
+                case AddEntityModel.Error.ExistingLogin:
+                    View.ShowErrorMessageBox("Аккаунт с таким логином уже существует"); 
+                    break;
+
+                case AddEntityModel.Error.EmptyPassword:
+                    View.ShowErrorMessageBox("Пароль не может быть пустым или состоять из пробелов");
+                    break;
+
+                case AddEntityModel.Error.EmptyType:
+                    View.ShowErrorMessageBox("Тип не может быть пустым или состоять из пробелов");
+                    break;
+
+                case AddEntityModel.Error.None:
+                    ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success, e.NewUser));
+                    break;
             }
         }
 

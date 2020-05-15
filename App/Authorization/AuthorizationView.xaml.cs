@@ -30,10 +30,9 @@ namespace Application.Authorization
 
         private void LoginBt_Click(object sender, EventArgs e)
         {
-            // TODO: move data wrapping to controller
             string login = LoginTB.Text.ToLower().Trim();
-            string passwordHash = Hasher.GetHash(PasswordTB.Password.Trim());
-            LoginAttempt.Invoke(this, new LoginEventArgs(new Credentials(login, passwordHash)));
+            string password = PasswordTB.Password.Trim();
+            LoginAttempt.Invoke(this, new LoginEventArgs(new Credentials(login, password)));
         }
 
         public void ReactToLoginAttempt(bool loginSuccessful)
@@ -41,10 +40,10 @@ namespace Application.Authorization
             if (loginSuccessful)
             {
                 string login = LoginTB.Text;
-                string passwordHash = Hasher.GetHash(PasswordTB.Password);
+                string password = PasswordTB.Password;
                 LoginTB.Clear();
                 PasswordTB.Clear();
-                SuccessfulLogin.Invoke(this, new LoginEventArgs(new Credentials(login, passwordHash)));
+                SuccessfulLogin.Invoke(this, new LoginEventArgs(new Credentials(login, password)));
             }
             else
             {

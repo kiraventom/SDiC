@@ -11,7 +11,7 @@ namespace SDiC.Main.Interfaces
     {
         event EventHandler SignOut;
         event EventHandler EditDb;
-        string Name { set; }
+        string Greeting { set; }
         bool ConfirmSigningOut();
         bool IsEditDbBtVisible { set; }
     }

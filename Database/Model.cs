@@ -18,6 +18,6 @@ namespace Database
         [Key]
         public string Login { get; set; }
         public string PasswordHash { get; set; }
-        public string Type { get; set; }
+        public int Level { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SDiC.Common;
+﻿using Database;
+using SDiC.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace SDiC.Authorization.Interfaces
 {
     public interface IAuthorizationModel : IModel
     {
-        Database.User Login(Credentials credentials);
+        User AuthorizedUser { get; }
+
+        bool Login(Credentials credentials);
     }
 }

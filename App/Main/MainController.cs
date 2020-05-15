@@ -34,18 +34,18 @@ namespace SDiC
         {
             set
             {
-                switch (value.Type.Trim().ToLower())
+                switch (value.Level)
                 {
-                    case "user":
-                        View.Name = "исследователь";
+                    case 0:
+                        View.Greeting = "исследователь";
                         View.IsEditDbBtVisible = false;
                         break;
-                    case "admin":
-                        View.Name = "администратор";
+                    case 1:
+                        View.Greeting = "администратор";
                         View.IsEditDbBtVisible = true;
                         break;
                     default:
-                        throw new NotImplementedException($"Unknown user type \"{value.Type}\"");
+                        throw new NotImplementedException($"Unknown user level \"{value.Level}\"");
                 }
                 Model.CurrentUser = value;
             }
