@@ -105,7 +105,7 @@ namespace MathModel
                                        gamma,
                                        T_p);
 
-            return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, N, z, T, eta);
+            return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, N, Q, T_p, eta_p, z, T, eta);
         }
 
         public GeometricParams GeometricParams { get; }
@@ -270,7 +270,7 @@ namespace MathModel
 
     public class Solution
     {
-        internal Solution(double F, double Q_CH, double gamma, double q_gamma, double q_alpha, int N,
+        internal Solution(double F, double Q_CH, double gamma, double q_gamma, double q_alpha, int N, double Q, double T_p, double eta_p,
                         IEnumerable<double> z, IEnumerable<double> T, IEnumerable<double> eta)
         {
             this.F = F;
@@ -279,6 +279,9 @@ namespace MathModel
             this.q_gamma = q_gamma;
             this.q_alpha = q_alpha;
             this.N = N;
+            this.Q = Q;
+            this.T_p = T_p;
+            this.eta_p = eta_p;
             this.z = z as IReadOnlyCollection<double>;
             this.T = T as IReadOnlyCollection<double>;
             this.eta = eta as IReadOnlyCollection<double>;
@@ -307,6 +310,18 @@ namespace MathModel
         /// Число шагов вычислений по длине канала
         /// </summary>
         public int N { get; }
+        /// <summary>
+        /// Производительность канала Q
+        /// </summary>
+        public double Q { get; }
+        /// <summary>
+        /// Температура продукта
+        /// </summary>
+        public double T_p { get; }
+        /// <summary>
+        /// Вязкость продукта
+        /// </summary>
+        public double eta_p { get; }
 
         public IReadOnlyCollection<double> z { get; }
         public IReadOnlyCollection<double> T { get; }
