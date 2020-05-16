@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\MathModel\MathModel.csproj" />
   </ItemGroup>
 
 </Project>

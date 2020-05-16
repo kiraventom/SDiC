@@ -256,7 +256,7 @@ namespace MathModel
 
     public class Solution
     {
-        public Solution(double F, double Q_CH, double gamma, double q_gamma, double q_alpha, int N,
+        internal Solution(double F, double Q_CH, double gamma, double q_gamma, double q_alpha, int N,
                         IEnumerable<double> z, IEnumerable<double> T, IEnumerable<double> eta)
         {
             this.F = F;
