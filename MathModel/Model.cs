@@ -1,27 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using MathModel.Parameters;
 
 namespace MathModel
 {
     public class Model
     {
-        public Model(GeometricParams geometricParams,
-                     MaterialParams materialParams,
-                     ProcessParams processParams,
-                     EmpiricCoeffs empiricCoeffs,
-                     SolveMethodParams solveMethodParams)
+        /// <summary>
+        /// Создаёт модель с указаными параметрами
+        /// </summary>
+        /// <param name="W">Ширина, м</param>
+        /// <param name="H">Глубина, м</param>
+        /// <param name="L">Длина, м</param>
+        /// <param name="ro">Плотность, кг/м^3</param>
+        /// <param name="c">Средняя удельная теплоемкость, Дж/(кг*С)</param>
+        /// <param name="T_0">Температура плавления, С</param>
+        /// <param name="V_u">Скорость крышки, м/с</param>
+        /// <param name="T_u">Температура крышки, C</param>
+        /// <param name="mu_0">Коэффициент консистенции материала при температуре приведения, Па*с^n</param>
+        /// <param name="b">Температурный коэффициент вязкости материала, 1/C</param>
+        /// <param name="T_r">Температура приведения, С</param>
+        /// <param name="n">Индекс течения материала</param>
+        /// <param name="alpha_u">Коэффициент теплоотдачи от крышки канала к материалу, Вт/(м^2*С)</param>
+        /// <param name="delta_z">Шаг расчета по длине канала, м</param>
+        public Model(double W, double H, double L, double ro, double c, double T_0, double V_u, double T_u, double mu_0,
+            double b, double T_r, double n, double alpha_u, double delta_z)
         {
-            GeometricParams = geometricParams;
-            MaterialParams = materialParams;
-            ProcessParams = processParams;
-            EmpiricCoeffs = empiricCoeffs;
-            SolveMethodParams = solveMethodParams;
+            GeometricParams = new GeometricParams(W, H, L);
+            MaterialParams = new MaterialParams(ro, c, T_0);
+            ProcessParams = new ProcessParams(V_u, T_u);
+            EmpiricCoeffs = new EmpiricCoeffs(mu_0, b, T_r, n, alpha_u);
+            SolveMethodParams = new SolveMethodParams(delta_z);
         }
 
         /// <summary>
-        /// Solves the model, described by params
+        /// Возвращает решение модели
         /// </summary>
-        /// <returns>Solution</returns>
         public Solution Solve()
         {
             List<double> z = new List<double>();
@@ -94,11 +108,11 @@ namespace MathModel
             return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, N, z, T, eta);
         }
 
-        public GeometricParams GeometricParams { get; set; }
-        public MaterialParams MaterialParams { get; set; }
-        public ProcessParams ProcessParams { get; set; }
-        public EmpiricCoeffs EmpiricCoeffs { get; set; }
-        public SolveMethodParams SolveMethodParams { get; set; }
+        public GeometricParams GeometricParams { get; }
+        public MaterialParams MaterialParams { get; }
+        public ProcessParams ProcessParams { get; }
+        public EmpiricCoeffs EmpiricCoeffs { get; }
+        public SolveMethodParams SolveMethodParams { get; }
 
         #region Functions
         /// <summary>
@@ -299,123 +313,145 @@ namespace MathModel
         public IReadOnlyCollection<double> eta { get; }
     }
 
-    /// <summary>
-    /// Геометрические параметры канала
-    /// </summary>
-    public class GeometricParams
+    namespace Parameters
     {
-        public GeometricParams(double W, double H, double L)
+        /// <summary>
+        /// Геометрические параметры канала
+        /// </summary>
+        public class GeometricParams
         {
-            this.W = W > 0 ? W : throw new ArgumentOutOfRangeException("Ширина не может быть не положительной"); 
-            this.H = H > 0 ? H : throw new ArgumentOutOfRangeException("Глубина не может быть не положительной");
-            this.L = L > 0 ? L : throw new ArgumentOutOfRangeException("Длина не может быть не положительной");
-        }
-        /// <summary>
-        /// Ширина, м
-        /// </summary>
-        public double W { get; }
-        /// <summary>
-        /// Глубина, м
-        /// </summary>
-        public double H { get; }
-        /// <summary>
-        /// Длина, м
-        /// </summary>
-        public double L { get; }
-    }
+            private double w;
+            private double h;
+            private double l;
 
-    /// <summary>
-    /// Параметры свойств материала
-    /// </summary>
-    public class MaterialParams 
-    {
-        public MaterialParams(double ro, double c, double T_0)
-        {
-            this.ro = ro > 0 ? ro : throw new ArgumentOutOfRangeException("Плотность не может быть не положительной");
-            this.c = c > 0 ? c : throw new ArgumentOutOfRangeException("Средняя удельная теплоемкость не может быть не положительной");
-            this.T_0 = T_0 > 0 ? T_0 : throw new ArgumentOutOfRangeException("Температура плавления не может быть не положительной");
+            internal GeometricParams(double W, double H, double L)
+            {
+                this.W = W > 0 ? W : throw new ArgumentOutOfRangeException("Ширина не может быть не положительной");
+                this.H = H > 0 ? H : throw new ArgumentOutOfRangeException("Глубина не может быть не положительной");
+                this.L = L > 0 ? L : throw new ArgumentOutOfRangeException("Длина не может быть не положительной");
+            }
+            /// <summary>
+            /// Ширина, м
+            /// </summary>
+            public double W { get => w; set => w = value > 0 ? value : throw new ArgumentOutOfRangeException("Ширина не может быть не положительной"); }
+            /// <summary>
+            /// Глубина, м
+            /// </summary>
+            public double H { get => h; set => h = value > 0 ? value : throw new ArgumentOutOfRangeException("Глубина не может быть не положительной"); }
+            /// <summary>
+            /// Длина, м
+            /// </summary>
+            public double L { get => l; set => l = value > 0 ? value : throw new ArgumentOutOfRangeException("Длина не может быть не положительной"); }
         }
-        /// <summary>
-        /// Плотность, кг/м^3
-        /// </summary>
-        public double ro { get; }
-        /// <summary>
-        /// Средняя удельная теплоемкость, Дж/(кг*С)
-        /// </summary>
-        public double c { get; }
-        /// <summary>
-        /// Температура плавления, С
-        /// </summary>
-        public double T_0 { get; }
-    }
 
-    /// <summary>
-    /// Режимные параметры процесса
-    /// </summary>
-    public class ProcessParams
-    {
-        public ProcessParams(double V_u, double T_u)
+        /// <summary>
+        /// Параметры свойств материала
+        /// </summary>
+        public class MaterialParams
         {
-            this.V_u = V_u > 0 ? V_u : throw new ArgumentOutOfRangeException("Скорость крышки не может быть не положительной");
-            this.T_u = T_u > 0 ? T_u : throw new ArgumentOutOfRangeException("Температура крышки не может быть не положительной");
-        }
-        /// <summary>
-        /// Скорость крышки, м/с
-        /// </summary>
-        public double V_u { get; }
-        /// <summary>
-        /// Температура крышки, C
-        /// </summary>
-        public double T_u { get; }
-    }
+            private double _ro;
+            private double _c;
+            private double t_0;
 
-    /// <summary>
-    /// Эмпирические коэффициенты математической модели
-    /// </summary>
-    public class EmpiricCoeffs
-    {
-        public EmpiricCoeffs(double mu_0, double b, double T_r, double n, double alpha_u)
-        {
-            this.mu_0 = mu_0 > 0 ? mu_0 : throw new ArgumentOutOfRangeException("Коэффициент консистенции материала не может быть не положительной");
-            this.b = b > 0 ? b : throw new ArgumentOutOfRangeException("Температурный коэффициент вязкости материала не может быть не положительной");
-            this.T_r = T_r > 0 ? T_r : throw new ArgumentOutOfRangeException("Температура приведения не может быть не положительной");
-            this.n = n > 0 ? n : throw new ArgumentOutOfRangeException("Индекс течения материала не может быть не положительной");
-            this.alpha_u = alpha_u > 0 ? alpha_u : throw new ArgumentOutOfRangeException("Коэффициент теплоотдачи от крышки канала к материалу не может быть не положительной");
+            internal MaterialParams(double ro, double c, double T_0)
+            {
+                this.ro = ro > 0 ? ro : throw new ArgumentOutOfRangeException("Плотность не может быть не положительной");
+                this.c = c > 0 ? c : throw new ArgumentOutOfRangeException("Средняя удельная теплоемкость не может быть не положительной");
+                this.T_0 = T_0 > 0 ? T_0 : throw new ArgumentOutOfRangeException("Температура плавления не может быть не положительной");
+            }
+            /// <summary>
+            /// Плотность, кг/м^3
+            /// </summary>
+            public double ro { get => _ro; set => _ro = value > 0 ? value : throw new ArgumentOutOfRangeException("Плотность не может быть не положительной"); }
+            /// <summary>
+            /// Средняя удельная теплоемкость, Дж/(кг*С)
+            /// </summary>
+            public double c { get => _c; set => _c = value > 0 ? value : throw new ArgumentOutOfRangeException("Средняя удельная теплоемкость не может быть не положительной"); }
+            /// <summary>
+            /// Температура плавления, С
+            /// </summary>
+            public double T_0 { get => t_0; set => t_0 = value > 0 ? value : throw new ArgumentOutOfRangeException("Температура плавления не может быть не положительной"); }
         }
-        /// <summary>
-        /// Коэффициент консистенции материала при температуре приведения, Па*с^n
-        /// </summary>
-        public double mu_0 { get; }
-        /// <summary>
-        /// Температурный коэффициент вязкости материала, 1/C
-        /// </summary>
-        public double b { get; }
-        /// <summary>
-        /// Температура приведения, С
-        /// </summary>
-        public double T_r { get; }
-        /// <summary>
-        /// Индекс течения материала
-        /// </summary>
-        public double n { get; }
-        /// <summary>
-        /// Коэффициент теплоотдачи от крышки канала к материалу, Вт/(м^2*С)
-        /// </summary>
-        public double alpha_u { get; }
-    }
 
-    /// <summary>
-    /// Параметры метода решения уравнений модели
-    /// </summary>
-    public class SolveMethodParams
-    {
-        public SolveMethodParams(double delta_z)
-        {
-            this.delta_z = delta_z > 0 ? delta_z : throw new ArgumentOutOfRangeException("Шаг расчета по длине канала не может быть не положительной");
-        }
         /// <summary>
-        /// Шаг расчета по длине канала, м
+        /// Режимные параметры процесса
         /// </summary>
-        public double delta_z { get; }
+        public class ProcessParams
+        {
+            private double v_u;
+            private double t_u;
+
+            internal ProcessParams(double V_u, double T_u)
+            {
+                this.V_u = V_u > 0 ? V_u : throw new ArgumentOutOfRangeException("Скорость крышки не может быть не положительной");
+                this.T_u = T_u > 0 ? T_u : throw new ArgumentOutOfRangeException("Температура крышки не может быть не положительной");
+            }
+            /// <summary>
+            /// Скорость крышки, м/с
+            /// </summary>
+            public double V_u { get => v_u; set => v_u = value > 0 ? value : throw new ArgumentOutOfRangeException("Скорость крышки не может быть не положительной"); }
+            /// <summary>
+            /// Температура крышки, C
+            /// </summary>
+            public double T_u { get => t_u; set => t_u = value > 0 ? value : throw new ArgumentOutOfRangeException("Температура крышки не может быть не положительной"); }
+        }
+
+        /// <summary>
+        /// Эмпирические коэффициенты математической модели
+        /// </summary>
+        public class EmpiricCoeffs
+        {
+            private double _mu_0;
+            private double _b;
+            private double t_r;
+            private double _n;
+            private double _alpha_u;
+
+            internal EmpiricCoeffs(double mu_0, double b, double T_r, double n, double alpha_u)
+            {
+                this.mu_0 = mu_0 > 0 ? mu_0 : throw new ArgumentOutOfRangeException("Коэффициент консистенции материала не может быть не положительным");
+                this.b = b > 0 ? b : throw new ArgumentOutOfRangeException("Температурный коэффициент вязкости материала не может быть не положительным");
+                this.T_r = T_r > 0 ? T_r : throw new ArgumentOutOfRangeException("Температура приведения не может быть не положительной");
+                this.n = n > 0 ? n : throw new ArgumentOutOfRangeException("Индекс течения материала не может быть не положительным");
+                this.alpha_u = alpha_u > 0 ? alpha_u : throw new ArgumentOutOfRangeException("Коэффициент теплоотдачи от крышки канала к материалу не может быть не положительным");
+            }
+            /// <summary>
+            /// Коэффициент консистенции материала при температуре приведения, Па*с^n
+            /// </summary>
+            public double mu_0 { get => _mu_0; set => _mu_0 = value > 0 ? value : throw new ArgumentOutOfRangeException("Коэффициент консистенции материала не может быть не положительным"); }
+            /// <summary>
+            /// Температурный коэффициент вязкости материала, 1/C
+            /// </summary>
+            public double b { get => _b; set => _b = value > 0 ? value : throw new ArgumentOutOfRangeException("Температурный коэффициент вязкости материала не может быть не положительным"); }
+            /// <summary>
+            /// Температура приведения, С
+            /// </summary>
+            public double T_r { get => t_r; set => t_r = value > 0 ? value : throw new ArgumentOutOfRangeException("Температура приведения не может быть не положительной"); }
+            /// <summary>
+            /// Индекс течения материала
+            /// </summary>
+            public double n { get => _n; set => _n = value > 0 ? value : throw new ArgumentOutOfRangeException("Индекс течения материала не может быть не положительным"); }
+            /// <summary>
+            /// Коэффициент теплоотдачи от крышки канала к материалу, Вт/(м^2*С)
+            /// </summary>
+            public double alpha_u { get => _alpha_u; set => _alpha_u = value > 0 ? value : throw new ArgumentOutOfRangeException("Коэффициент теплоотдачи от крышки канала к материалу не может быть не положительным"); }
+        }
+
+        /// <summary>
+        /// Параметры метода решения уравнений модели
+        /// </summary>
+        public class SolveMethodParams
+        {
+            private double _delta_z;
+
+            internal SolveMethodParams(double delta_z)
+            {
+                this.delta_z = delta_z > 0 ? delta_z : throw new ArgumentOutOfRangeException("Шаг расчета по длине канала не может быть не положительным");
+            }
+            /// <summary>
+            /// Шаг расчета по длине канала, м
+            /// </summary>
+            public double delta_z { get => _delta_z; set => _delta_z = value > 0 ? value : throw new ArgumentOutOfRangeException("Шаг расчета по длине канала не может быть не положительным"); }
+        }
     }
 }
