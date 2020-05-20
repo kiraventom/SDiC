@@ -1,4 +1,5 @@
 ﻿using App.Main.DbEdit;
+using App.Main.DbEdit.ChemistryDbEdit;
 using App.Main.DbEdit.Interfaces;
 using SDiC.Common;
 using SDiC.Main.Interfaces;
@@ -20,8 +21,16 @@ namespace SDiC
             Model = model;
 
             View.SignOut += this.View_SignOut;
-            View.EditDb += this.View_EditDb;
+            View.EditUsersDb += this.View_EditDb;
+            View.EditChemistryDb += this.View_EditChemistryDb;
             (View as Window).Closed += this.MainView_Closed;
+        }
+
+        private void View_EditChemistryDb(object sender, EventArgs e)
+        {
+            DbEditController dbEditController = new ChemistryDbEditController(new ChemistryDbEditView(), new ChemistryDbEditModel());
+            dbEditController.ControllerClosed += (sender, ea) => { };
+            dbEditController.Show();
         }
 
         IView IController.View => View as IView;
@@ -30,7 +39,7 @@ namespace SDiC
         private readonly IMainView View;
         private readonly IMainModel Model;
 
-        public Database.User CurrentUser
+        public AuthorizationDB.User CurrentUser
         {
             set
             {
@@ -38,11 +47,11 @@ namespace SDiC
                 {
                     case 0:
                         View.Greeting = "исследователь";
-                        View.IsEditDbBtVisible = false;
+                        View.IsEditDbBtsVisible = false;
                         break;
                     case 1:
                         View.Greeting = "администратор";
-                        View.IsEditDbBtVisible = true;
+                        View.IsEditDbBtsVisible = true;
                         break;
                     default:
                         throw new NotImplementedException($"Unknown user level \"{value.Level}\"");
@@ -62,7 +71,7 @@ namespace SDiC
 
         private void View_EditDb(object sender, EventArgs e)
         {
-            IDbEditController dbEditController = new DbEditController(new DbEditView(), new DbEditModel());
+            DbEditController dbEditController = new UsersDbEditController(new UsersDbEditView(), new UsersDbEditModel());
             dbEditController.ControllerClosed += (sender, ea) => { };
             dbEditController.Show();
         }

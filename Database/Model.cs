@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Database
+namespace AuthorizationDB
 {
     public class UsersContext : DbContext
     {
@@ -15,7 +15,24 @@ namespace Database
 
     public class User
     {
+        public User()
+        {
+            Id = -1;
+            Login = string.Empty;
+            PasswordHash = null;
+            Level = 0;
+        }
+
+        public User(long id)
+        {
+            Id = id;
+            Login = string.Empty;
+            PasswordHash = null;
+            Level = 0;
+        }
+
         [Key]
+        public long Id { get; set; }
         public string Login { get; set; }
         public string PasswordHash { get; set; }
         public int Level { get; set; }

@@ -9,6 +9,6 @@ namespace SDiC.Main.Interfaces
 {
     public interface IMainController : IController
     {
-        Database.User CurrentUser { set; }
+        AuthorizationDB.User CurrentUser { set; }
     }
 }

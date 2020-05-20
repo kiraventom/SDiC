@@ -11,7 +11,7 @@ namespace SDiC
     {
         public bool Login(Credentials credentials)
         {
-            using (var db = new Database.UsersContext())
+            using (var db = new AuthorizationDB.UsersContext())
             {
                 AuthorizedUser = db.Users
                     .AsEnumerable()
@@ -21,6 +21,6 @@ namespace SDiC
             return AuthorizedUser != null;
         }
 
-        public Database.User AuthorizedUser { get; private set; } = null;
+        public AuthorizationDB.User AuthorizedUser { get; private set; } = null;
     }
 }

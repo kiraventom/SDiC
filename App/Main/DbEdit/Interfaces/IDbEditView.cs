@@ -1,15 +1,19 @@
-﻿using SDiC.Common;
+﻿using SDiC;
+using SDiC.Common;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows.Controls;
 
 namespace App.Main.DbEdit.Interfaces
 {
     public interface IDbEditView : IView
     {
-        IEnumerable<Database.User> Source { set; }
-
-        event EventHandler AddUserRequest;
+        dynamic Source { set; }
+        event EventHandler<AddingNewItemEventArgs> AddItemAttempt;
+        event EventHandler<TableSelectedEventArgs> TableSelected;
 
         bool? ConfirmChanges();
     }

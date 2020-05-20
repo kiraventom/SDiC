@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Database.Migrations
+namespace AuthorizationDB.Migrations
 {
     public partial class UserType : Migration
     {

@@ -1,6 +1,7 @@
 ﻿using App.Main.DbEdit.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -9,23 +10,23 @@ using System.Linq;
 
 namespace App.Main.DbEdit
 {
-    public class DbEditModel : IDbEditModel
+    public class UsersDbEditModel : IDbEditModel
     {
-        public DbEditModel()
+        public UsersDbEditModel()
         {
-            Context = new Database.UsersContext();
+            Context = new AuthorizationDB.UsersContext();
         }
 
-        private readonly Database.UsersContext Context;
+        private readonly AuthorizationDB.UsersContext Context;
 
-        public ObservableCollection<Database.User> ReadAll()
+        dynamic IDbEditModel.ReadAll()
         {
             Context.Users.Load();
             return Context.Users.Local.ToObservableCollection();
         }
 
-        public void Save() => Context.SaveChanges();
+        void IDbEditModel.Save() => Context.SaveChanges();
 
-        ~DbEditModel() => Context.Dispose();
+        ~UsersDbEditModel() => Context.Dispose();
     }
 }

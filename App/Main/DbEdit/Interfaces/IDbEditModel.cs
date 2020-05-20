@@ -1,5 +1,6 @@
 ﻿using SDiC.Common;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -10,7 +11,7 @@ namespace App.Main.DbEdit.Interfaces
 {
     public interface IDbEditModel : IModel
     {
-        ObservableCollection<Database.User> ReadAll();
+        dynamic ReadAll();
         void Save();
     }
 }

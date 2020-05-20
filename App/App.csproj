@@ -12,10 +12,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="TextCopy" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\ChemistryDB\ChemistryDB.csproj" />
+    <ProjectReference Include="..\Database\AuthorizationDB.csproj" />
     <ProjectReference Include="..\MathModel\MathModel.csproj" />
   </ItemGroup>
 

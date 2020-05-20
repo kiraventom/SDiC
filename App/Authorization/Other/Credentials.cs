@@ -28,7 +28,7 @@ namespace SDiC
                 this.PasswordHash.Equals(credentials.PasswordHash, StringComparison.OrdinalIgnoreCase);
         }
 
-        public bool Equals(Database.User user)
+        public bool Equals(AuthorizationDB.User user)
         {
             return
                 this.Login.Equals(user.Login, StringComparison.OrdinalIgnoreCase)

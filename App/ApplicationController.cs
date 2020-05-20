@@ -28,7 +28,7 @@ namespace SDiC
             {
                 case ControllerClosedEventArgs.CloseReason.Success: // sign in
                     AuthController.Close();
-                    (MainController as IMainController).CurrentUser = e.Data as Database.User;
+                    (MainController as IMainController).CurrentUser = e.Data as AuthorizationDB.User;
                     MainController.Show();
                     break;
 

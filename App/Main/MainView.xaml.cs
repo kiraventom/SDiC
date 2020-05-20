@@ -28,9 +28,14 @@ namespace Application
             SignOut.Invoke(this, EventArgs.Empty);
         }
 
-        private void EditDbBt_Click(object sender, RoutedEventArgs e)
+        private void EditUsersDbBt_Click(object sender, RoutedEventArgs e)
         {
-            EditDb.Invoke(this, EventArgs.Empty);
+            EditUsersDb.Invoke(this, EventArgs.Empty);
+        }
+
+        private void EditChemistryDbBt_Click(object sender, RoutedEventArgs e)
+        {
+            EditChemistryDb.Invoke(this, EventArgs.Empty);
         }
 
         public bool ConfirmSigningOut()
@@ -43,7 +48,8 @@ namespace Application
         }
 
         public event EventHandler SignOut;
-        public event EventHandler EditDb;
+        public event EventHandler EditUsersDb;
+        public event EventHandler EditChemistryDb;
 
         const string greetingStart = "Здравствуйте, ";
         public string Greeting
@@ -54,11 +60,12 @@ namespace Application
             }
         }
 
-        public bool IsEditDbBtVisible
+        public bool IsEditDbBtsVisible
         {
             set
             {
-                EditDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
+                EditUsersDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
+                EditChemistryDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
             }
         }
     }

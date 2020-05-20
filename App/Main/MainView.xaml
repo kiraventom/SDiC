@@ -9,6 +9,7 @@
     <Grid>
         <Button x:Name="SignOutBt" Content="Выйти из аккаунта" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="25" Width="137" Click="SignOutBt_Click"/>
         <Label x:Name="GreetingsL" Content="Value" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="24"/>
-        <Button x:Name="EditDbBt" Content="Редактировать БД" HorizontalAlignment="Right" Margin="0,10,152,0" VerticalAlignment="Top" Height="25" Width="137" Click="EditDbBt_Click"/>
+        <Button x:Name="EditUsersDbBt" Content="Открыть БД аккаунтов" HorizontalAlignment="Right" Margin="0,40,152,0" VerticalAlignment="Top" Height="25" Width="142" Click="EditUsersDbBt_Click"/>
+        <Button x:Name="EditChemistryDbBt" Content="Открыть БД свойств" HorizontalAlignment="Right" Margin="0,10,152,0" VerticalAlignment="Top" Height="25" Width="142" Click="EditChemistryDbBt_Click"/>
     </Grid>
 </Window>

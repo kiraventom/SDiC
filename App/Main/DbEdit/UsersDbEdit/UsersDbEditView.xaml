@@ -1,0 +1,34 @@
+﻿<Window x:Class="App.Main.DbEdit.UsersDbEditView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:App.Main.DbEdit"
+        mc:Ignorable="d"
+        Title="Редактирование БД" Height="418" Width="623" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <StackPanel>
+        <DataGrid 
+            x:Name="MainDG" 
+            ItemsSource="{Binding Source}" 
+            CanUserReorderColumns="False" 
+            CanUserSortColumns="False" 
+            AddingNewItem="MainDG_AddingNewItem" 
+            AutoGeneratingColumn="MainDG_AutoGeneratingColumn" GotFocus="MainDG_GotFocus"/>
+        <StackPanel Orientation="Horizontal" Margin="0, 20, 0, 0">
+            <Label Content="Пароль:"/>
+            <PasswordBox x:Name="HasherPB" Width="100" Margin="5, 0, 5, 0"/>
+            <Button 
+                x:Name="GenerateHashBt"
+                Content="Сгенерировать хэш" 
+                Height="20" 
+                Width="128" Click="GenerateHashBt_Click"/>
+        </StackPanel>
+        <Popup x:Name="ConfirmPU" StaysOpen="False" Placement="Center"
+         AllowsTransparency="True" PopupAnimation="Fade">
+            <TextBlock TextWrapping="Wrap" Background="LightGreen" Opacity="0.8" >
+            Хэш скопирован в буфер обмена!
+            </TextBlock>
+        </Popup>
+    </StackPanel>
+</Window>
