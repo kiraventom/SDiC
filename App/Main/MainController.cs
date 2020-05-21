@@ -1,29 +1,24 @@
-﻿using App.Main.DbEdit;
-using App.Main.DbEdit.ChemistryDbEdit;
-using App.Main.DbEdit.Interfaces;
-using SDiC.Common;
-using SDiC.Main.Interfaces;
+﻿using App.Common.Abstraction;
+using App.Common.CustomEventArgs;
+using App.DbEdit.Abstraction;
+using App.DbEdit.Chemistry;
+using App.DbEdit.Users;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.ComponentModel;
 
-namespace SDiC
+namespace App.Main
 {
-    public class MainController : IMainController
+    public sealed class MainController : Controller
     {
-        public MainController(IMainView view, IMainModel model)
+        public MainController(MainView view, MainModel model)
         {
-            View = view;
-            Model = model;
+            this.view = view;
+            this.model = model;
 
-            View.SignOut += this.View_SignOut;
-            View.EditUsersDb += this.View_EditDb;
-            View.EditChemistryDb += this.View_EditChemistryDb;
-            (View as Window).Closed += this.MainView_Closed;
+            this.view.SignOut += this.View_SignOut;
+            this.view.EditUsersDb += this.View_EditDb;
+            this.view.EditChemistryDb += this.View_EditChemistryDb;
+            this.view.Closing += this.MainView_Closing;
         }
 
         private void View_EditChemistryDb(object sender, EventArgs e)
@@ -33,11 +28,11 @@ namespace SDiC
             dbEditController.Show();
         }
 
-        IView IController.View => View as IView;
-        IModel IController.Model => Model as IModel;
+        protected override View View => view as View;
+        protected override Model Model => model as Model;
 
-        private readonly IMainView View;
-        private readonly IMainModel Model;
+        private readonly MainView view;
+        private readonly MainModel model;
 
         public AuthorizationDB.User CurrentUser
         {
@@ -46,23 +41,23 @@ namespace SDiC
                 switch (value.Level)
                 {
                     case 0:
-                        View.Greeting = "исследователь";
-                        View.IsEditDbBtsVisible = false;
+                        view.Greeting = "исследователь";
+                        view.IsEditDbBtsVisible = false;
                         break;
                     case 1:
-                        View.Greeting = "администратор";
-                        View.IsEditDbBtsVisible = true;
+                        view.Greeting = "администратор";
+                        view.IsEditDbBtsVisible = true;
                         break;
                     default:
                         throw new NotImplementedException($"Unknown user level \"{value.Level}\"");
                 }
-                Model.CurrentUser = value;
+                model.CurrentUser = value;
             }
         }
 
         private void View_SignOut(object sender, EventArgs e)
         {
-            bool shouldSignOut = View.ConfirmSigningOut();
+            bool shouldSignOut = MainView.ConfirmSigningOut();
             if (shouldSignOut)
             {
                 ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Abort));
@@ -76,14 +71,14 @@ namespace SDiC
             dbEditController.Show();
         }
 
-        private void MainView_Closed(object sender, EventArgs e) 
+        private void MainView_Closing(object sender, CancelEventArgs e) 
         {
             ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success));
         }
 
-        public event EventHandler<ControllerClosedEventArgs> ControllerClosed;
+        public override event EventHandler<ControllerClosedEventArgs> ControllerClosed;
 
-        public void Show() => View.Show();
-        public void Close() => View.Hide();
+        public override void Show() => view.Show();
+        public override void Close() => view.Hide();
     }
 }

@@ -1,51 +1,49 @@
-﻿using SDiC.Authorization.Interfaces;
-using SDiC.Common;
+﻿using App.Authorization;
+using App.Common;
+using App.Common.Abstraction;
+using App.Common.CustomEventArgs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace SDiC
+namespace App.Authorization
 {
-    class AuthorizationController : IAuthorizationController
+    public class AuthorizationController : Controller
     {
-        public AuthorizationController(IAuthorizationView view, IAuthorizationModel model)
+        public AuthorizationController(AuthorizationView view, AuthorizationModel model)
         {
-            View = view;
-            Model = model;
+            this.view = view;
+            this.model = model;
 
-            View.LoginAttempt += this.View_LoginAttempt;
-            View.SuccessfulLogin += this.View_SuccessfulLogin;
-            (View as Window).Closed += this.AuthorizationView_Closed;
+            this.view.LoginAttempt += this.View_LoginAttempt;
+            this.view.SuccessfulLogin += this.View_SuccessfulLogin;
+            this.view.Closing += AuthorizationView_Closing;
         }
 
-        IView IController.View => View as IView;
-        IModel IController.Model => Model as IModel;
+        protected override View View => view as View;
+        protected override Model Model => model as Model;
 
-        private readonly IAuthorizationView View;
-        private readonly IAuthorizationModel Model;
+        private readonly AuthorizationView view;
+        private readonly AuthorizationModel model;
 
-        public event EventHandler<ControllerClosedEventArgs> ControllerClosed;
+        public override event EventHandler<ControllerClosedEventArgs> ControllerClosed;
 
         public void View_LoginAttempt(object sender, LoginEventArgs e)
         {
-            bool isLoginSuccessful = Model.Login(e.Credentials);
-            View.ReactToLoginAttempt(isLoginSuccessful);
+            bool isLoginSuccessful = model.Login(e.Credentials);
+            view.ReactToLoginAttempt(isLoginSuccessful);
         }
 
         public void View_SuccessfulLogin(object sender, LoginEventArgs e)
         {
-            ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success, Model.AuthorizedUser));
+            ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Success, model.AuthorizedUser));
         }
 
-        private void AuthorizationView_Closed(object sender, EventArgs e)
+        private void AuthorizationView_Closing(object sender, EventArgs e)
         {
             ControllerClosed.Invoke(this, new ControllerClosedEventArgs(ControllerClosedEventArgs.CloseReason.Abort));
         }
 
-        public void Show() => View.Show();
-        public void Close() => View.Hide();
+        public override void Show() => view.Show();
+        public override void Close() => view.Hide();
     }
 }

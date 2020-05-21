@@ -1,6 +1,7 @@
-﻿using System;
+﻿using App.Authorization.Other;
+using System;
 
-namespace SDiC
+namespace App.Common.CustomEventArgs
 {
     public class LoginEventArgs : EventArgs
     {

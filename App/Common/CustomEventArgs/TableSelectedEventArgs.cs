@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SDiC
+namespace App.Common.CustomEventArgs
 {
     public class TableSelectedEventArgs : EventArgs
     {

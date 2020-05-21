@@ -1,36 +1,34 @@
-﻿using SDiC.Common;
+﻿using App.Common.Abstraction;
+using App.Common.CustomEventArgs;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using System.Windows;
 
-namespace App.Main.DbEdit.Interfaces
+namespace App.DbEdit.Abstraction
 {
-    public class DbEditController : IController
+    public abstract class DbEditController : Controller
     {
-        protected DbEditController(IDbEditView view, IDbEditModel model)
+        protected DbEditController(DbEditView view, DbEditModel model)
         {
-            View = view;
-            Model = model;
-            View.Source = Model.ReadAll();
-            (View as Window).Closing += this.DbEditView_Closing;
-            View.AddItemAttempt += this.View_AddItemAttempt;
-            View.TableSelected += this.View_TableSelected;
+            this.view = view;
+            this.model = model;
+            this.view.Source = this.model.GetAllTables();
+            view.Closing += this.View_Closing;
+            view.AddItemAttempt += this.View_AddItemAttempt;
+            view.TableSelected += this.View_TableSelected;
         }
 
         public Type CurrentType { get; protected set; }
 
-        IView IController.View => View as IView;
-        IModel IController.Model => Model as IModel;
+        protected override View View => view as View;
+        protected override Model Model => model as Model;
 
-        public IDbEditView View { get; }
-        public IDbEditModel Model { get; }
+        private readonly DbEditView view;
+        private readonly DbEditModel model;
 
-        public event EventHandler<ControllerClosedEventArgs> ControllerClosed;
+        public override event EventHandler<ControllerClosedEventArgs> ControllerClosed;
 
-        public void Show() => View.ShowDialog();
-        public void Close() => View.Close();
+        public override void Show() => View.ShowDialog();
+        public override void Close() => View.Close();
 
         private void View_AddItemAttempt(object sender, System.Windows.Controls.AddingNewItemEventArgs e)
         {
@@ -57,19 +55,19 @@ namespace App.Main.DbEdit.Interfaces
             }
         }
 
-        private void View_TableSelected(object sender, SDiC.TableSelectedEventArgs e)
+        private void View_TableSelected(object sender, TableSelectedEventArgs e)
         {
             CurrentType = e.Type;
         }
 
-        private void DbEditView_Closing(object sender, CancelEventArgs e)
+        private void View_Closing(object sender, CancelEventArgs e)
         {
             ControllerClosedEventArgs.CloseReason closeReason;
-            switch (View.ConfirmChanges())
+            switch (DbEditView.ConfirmChanges())
             {
                 case true:
                     closeReason = ControllerClosedEventArgs.CloseReason.Success;
-                    Model.Save();
+                    model.Save();
                     break;
                 case false:
                     closeReason = ControllerClosedEventArgs.CloseReason.Abort;

@@ -1,18 +1,11 @@
-﻿using Application;
-using Application.Authorization;
-using SDiC.Common;
-using SDiC.Main;
-using SDiC.Main.Interfaces;
+﻿using App.Authorization;
+using App.Common.CustomEventArgs;
+using App.Main;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
-namespace SDiC
+namespace App
 {
-    public class ApplicationController
+    public sealed class ApplicationController
     {
         public ApplicationController()
         {
@@ -28,7 +21,7 @@ namespace SDiC
             {
                 case ControllerClosedEventArgs.CloseReason.Success: // sign in
                     AuthController.Close();
-                    (MainController as IMainController).CurrentUser = e.Data as AuthorizationDB.User;
+                    MainController.CurrentUser = e.Data as AuthorizationDB.User;
                     MainController.Show();
                     break;
 
@@ -59,8 +52,8 @@ namespace SDiC
             }
         }
 
-        readonly IController AuthController;
-        readonly IController MainController;
+        readonly AuthorizationController AuthController;
+        readonly MainController MainController;
 
         public void Run()
         {

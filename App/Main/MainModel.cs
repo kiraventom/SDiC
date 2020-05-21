@@ -1,17 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SDiC.Common;
-using SDiC.Main.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using App.Common.Abstraction;
 
-namespace SDiC
+namespace App.Main
 {
-    public class MainModel : IMainModel
+    public sealed class MainModel : Model
     {
         public AuthorizationDB.User CurrentUser { get; set; }
     }

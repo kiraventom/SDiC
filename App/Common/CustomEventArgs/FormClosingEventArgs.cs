@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SDiC.Common
+namespace App.Common.CustomEventArgs
 {
     public class ControllerClosedEventArgs : EventArgs
     {

@@ -1,13 +1,10 @@
-﻿using SDiC.Authorization.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using App.Authorization.Other;
+using App.Common.Abstraction;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SDiC
+namespace App.Authorization
 {
-    class AuthorizationModel : IAuthorizationModel
+    public class AuthorizationModel : Model
     {
         public bool Login(Credentials credentials)
         {
@@ -17,7 +14,6 @@ namespace SDiC
                     .AsEnumerable()
                     .FirstOrDefault(u => credentials.Equals(u));
             }
-
             return AuthorizedUser != null;
         }
 

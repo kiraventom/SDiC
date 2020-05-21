@@ -1,27 +1,24 @@
-﻿using SDiC.Main.Interfaces;
+﻿using App.Common.Abstraction;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace Application
+namespace App.Main
 {
-    public partial class MainView : Window, IMainView
+    public sealed class MainView : View
     {
         public MainView()
         {
-            InitializeComponent();
+            window.SignOutBt.Click += SignOutBt_Click;
+            window.EditUsersDbBt.Click += EditUsersDbBt_Click;
+            window.EditChemistryDbBt.Click += EditChemistryDbBt_Click;
         }
+
+        public event EventHandler SignOut;
+        public event EventHandler EditUsersDb;
+        public event EventHandler EditChemistryDb;
+
+        protected override Window Window => window as Window;
+        private readonly MainWindow window = new MainWindow();
 
         private void SignOutBt_Click(object sender, RoutedEventArgs e)
         {
@@ -38,7 +35,7 @@ namespace Application
             EditChemistryDb.Invoke(this, EventArgs.Empty);
         }
 
-        public bool ConfirmSigningOut()
+        public static bool ConfirmSigningOut()
         {
             var mbr = MessageBox.Show("Вы действительно хотите выйти из аккаунта?",
                                       "Подтверждение",
@@ -47,16 +44,12 @@ namespace Application
             return mbr == MessageBoxResult.Yes;
         }
 
-        public event EventHandler SignOut;
-        public event EventHandler EditUsersDb;
-        public event EventHandler EditChemistryDb;
-
         const string greetingStart = "Здравствуйте, ";
         public string Greeting
         {
             set
             {
-                GreetingsL.Content = greetingStart + value;
+                window.GreetingsL.Content = greetingStart + value;
             }
         }
 
@@ -64,8 +57,8 @@ namespace Application
         {
             set
             {
-                EditUsersDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
-                EditChemistryDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
+                window.EditUsersDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
+                window.EditChemistryDbBt.Visibility = value ? Visibility.Visible : Visibility.Hidden;
             }
         }
     }

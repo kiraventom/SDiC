@@ -1,11 +1,6 @@
-﻿using SDiC.Authorization.Other;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace SDiC
+namespace App.Authorization.Other
 {
     public class Credentials
     {
