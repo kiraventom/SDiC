@@ -10,19 +10,19 @@ namespace App.Authorization
     {
         public AuthorizationView() : base()
         {
-            window.LoginBt.Click += LoginBt_Click;
+            authorizationWindow.LoginBt.Click += LoginBt_Click;
         }
 
-        protected override Window Window => window as Window;
-        private readonly AuthorizationWindow window = new AuthorizationWindow();
+        protected override Window Window => authorizationWindow;
+        private readonly AuthorizationWindow authorizationWindow = new AuthorizationWindow();
 
         public event EventHandler<LoginEventArgs> LoginAttempt;
         public event EventHandler<LoginEventArgs> SuccessfulLogin;
 
         private void LoginBt_Click(object sender, EventArgs e)
         {
-            string login = window.LoginTB.Text.ToLower().Trim();
-            string password = window.PasswordTB.Password.Trim();
+            string login = authorizationWindow.LoginTB.Text.ToLower().Trim();
+            string password = authorizationWindow.PasswordTB.Password.Trim();
             LoginAttempt.Invoke(this, new LoginEventArgs(new Credentials(login, password)));
         }
 
@@ -30,10 +30,10 @@ namespace App.Authorization
         {
             if (loginSuccessful)
             {
-                string login = window.LoginTB.Text;
-                string password = window.PasswordTB.Password;
-                window.LoginTB.Clear();
-                window.PasswordTB.Clear();
+                string login = authorizationWindow.LoginTB.Text;
+                string password = authorizationWindow.PasswordTB.Password;
+                authorizationWindow.LoginTB.Clear();
+                authorizationWindow.PasswordTB.Clear();
                 SuccessfulLogin.Invoke(this, new LoginEventArgs(new Credentials(login, password)));
             }
             else

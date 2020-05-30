@@ -58,7 +58,7 @@ namespace App.DbEdit.Abstraction
                 MessageBoxResult.Yes => true,
                 MessageBoxResult.No => false,
                 MessageBoxResult.Cancel => null,
-                _ => throw new NotImplementedException($"MessageBoxResult \"{mbr.ToString()}\" is not \"Yes\", \"No\" or \"Cancel\"")
+                _ => throw new NotImplementedException($"MessageBoxResult \"{mbr}\" is not \"Yes\", \"No\" or \"Cancel\"")
             };
         }
 

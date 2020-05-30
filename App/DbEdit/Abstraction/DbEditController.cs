@@ -19,8 +19,8 @@ namespace App.DbEdit.Abstraction
 
         public Type CurrentType { get; protected set; }
 
-        protected override View View => view as View;
-        protected override Model Model => model as Model;
+        protected override View View => view;
+        protected override Model Model => model;
 
         private readonly DbEditView view;
         private readonly DbEditModel model;
@@ -32,27 +32,8 @@ namespace App.DbEdit.Abstraction
 
         private void View_AddItemAttempt(object sender, System.Windows.Controls.AddingNewItemEventArgs e)
         {
-            var dg = sender as System.Windows.Controls.DataGrid;
-            long id;
-            var constructor = CurrentType.GetConstructor(new[] { typeof(long) });
-            if (constructor != null) // entity has constructor with one parameter => it has 'Id' property
-            {
-                if (dg.Items.Count > 1)
-                {
-                    dynamic entityBeforeAdded = dg.Items[dg.Items.Count - 2];
-                    id = entityBeforeAdded.Id + 1;
-                }
-                else
-                {
-                    id = 1;
-                }
-                e.NewItem = constructor.Invoke(new object[] { id });
-            }
-            else
-            {
-                constructor = e.NewItem.GetType().GetConstructor(Type.EmptyTypes);
-                e.NewItem = constructor.Invoke(Array.Empty<object>());
-            }
+            var constructor = CurrentType.GetConstructor(Type.EmptyTypes);
+            e.NewItem = constructor.Invoke(Array.Empty<object>());
         }
 
         private void View_TableSelected(object sender, TableSelectedEventArgs e)

@@ -6,6 +6,15 @@ namespace MathModel
 {
     public sealed class Model
     {
+        public Model()
+        {
+            GeometricParams = new GeometricParams();
+            MaterialParams = new MaterialParams();
+            ProcessParams = new ProcessParams();
+            EmpiricCoeffs = new EmpiricCoeffs();
+            SolveMethodParams = new SolveMethodParams();
+        }
+
         /// <summary>
         /// Создаёт модель с указаными параметрами
         /// </summary>
@@ -38,46 +47,55 @@ namespace MathModel
         /// </summary>
         public Solution Solve()
         {
+            if (GeometricParams is null
+                || MaterialParams is null
+                || ProcessParams is null
+                || EmpiricCoeffs is null
+                || SolveMethodParams is null)
+            {
+                return null;
+            }
+
             List<double> z = new List<double>();
             List<double> T = new List<double>();
             List<double> eta = new List<double>();
 
-            double F = Model.F(GeometricParams.H, GeometricParams.W);
-            double Q_CH = Model.Q_CH(GeometricParams.H,
-                                     GeometricParams.W,
-                                     ProcessParams.V_u,
+            double F = Model.F(GeometricParams.Height, GeometricParams.Width);
+            double Q_CH = Model.Q_CH(GeometricParams.Height,
+                                     GeometricParams.Width,
+                                     ProcessParams.LidSpeed,
                                      F);
-            double gamma = Model.gamma(GeometricParams.H, ProcessParams.V_u);
-            double q_gamma = Model.q_gamma(GeometricParams.H,
-                                           GeometricParams.W,
-                                           EmpiricCoeffs.mu_0,
-                                           EmpiricCoeffs.n,
+            double gamma = Model.gamma(GeometricParams.Height, ProcessParams.LidSpeed);
+            double q_gamma = Model.q_gamma(GeometricParams.Height,
+                                           GeometricParams.Width,
+                                           EmpiricCoeffs.ConsistencyCoefficient,
+                                           EmpiricCoeffs.MaterialFlowIndex,
                                            gamma);
-            double q_alpha = Model.q_alpha(GeometricParams.W,
-                                           ProcessParams.T_u,
-                                           EmpiricCoeffs.b,
-                                           EmpiricCoeffs.T_r,
-                                           EmpiricCoeffs.alpha_u);
-            int N = Model.N(GeometricParams.L, SolveMethodParams.delta_z);
+            double q_alpha = Model.q_alpha(GeometricParams.Width,
+                                           ProcessParams.LidTemperature,
+                                           EmpiricCoeffs.ViscosityTemperatureCoefficient,
+                                           EmpiricCoeffs.CastTemperature,
+                                           EmpiricCoeffs.HeatTransferCoefficient);
+            int N = Model.N(GeometricParams.Length, SolveMethodParams.CalculationStep);
 
             for (int i = 0; i < N; ++i)
             {
-                double z_i = Model.z_i(i, SolveMethodParams.delta_z);
-                double T_i = Model.T_i(GeometricParams.W,
-                                       MaterialParams.ro,
-                                       MaterialParams.c,
-                                       MaterialParams.T_0,
-                                       EmpiricCoeffs.b,
-                                       EmpiricCoeffs.T_r,
-                                       EmpiricCoeffs.alpha_u,
+                double z_i = Model.z_i(i, SolveMethodParams.CalculationStep);
+                double T_i = Model.T_i(GeometricParams.Width,
+                                       MaterialParams.Density,
+                                       MaterialParams.AverageSpecificHeatCapacity,
+                                       MaterialParams.MeltingTemperature,
+                                       EmpiricCoeffs.ViscosityTemperatureCoefficient,
+                                       EmpiricCoeffs.CastTemperature,
+                                       EmpiricCoeffs.HeatTransferCoefficient,
                                        Q_CH,
                                        q_gamma,
                                        q_alpha,
                                        z_i);
-                double eta_i = Model.eta_i(EmpiricCoeffs.mu_0,
-                                           EmpiricCoeffs.b,
-                                           EmpiricCoeffs.T_r,
-                                           EmpiricCoeffs.n,
+                double eta_i = Model.eta_i(EmpiricCoeffs.ConsistencyCoefficient,
+                                           EmpiricCoeffs.ViscosityTemperatureCoefficient,
+                                           EmpiricCoeffs.CastTemperature,
+                                           EmpiricCoeffs.MaterialFlowIndex,
                                            gamma,
                                            T_i);
                 z.Add(z_i);
@@ -85,23 +103,23 @@ namespace MathModel
                 eta.Add(eta_i);
             }
 
-            double Q = Model.Q(MaterialParams.ro, Q_CH);
-            double z_p = Model.z_i(N, SolveMethodParams.delta_z);
-            double T_p = Model.T_p(GeometricParams.W,
-                                   MaterialParams.ro,
-                                   MaterialParams.c,
-                                   MaterialParams.T_0,
-                                   EmpiricCoeffs.b,
-                                   EmpiricCoeffs.T_r,
-                                   EmpiricCoeffs.alpha_u,
+            double Q = Model.Q(MaterialParams.Density, Q_CH);
+            double z_p = Model.z_i(N, SolveMethodParams.CalculationStep);
+            double T_p = Model.T_p(GeometricParams.Width,
+                                   MaterialParams.Density,
+                                   MaterialParams.AverageSpecificHeatCapacity,
+                                   MaterialParams.MeltingTemperature,
+                                   EmpiricCoeffs.ViscosityTemperatureCoefficient,
+                                   EmpiricCoeffs.CastTemperature,
+                                   EmpiricCoeffs.HeatTransferCoefficient,
                                    Q_CH,
                                    q_gamma,
                                    q_alpha,
                                    z_p);
-            double eta_p = Model.eta_p(EmpiricCoeffs.mu_0,
-                                       EmpiricCoeffs.b,
-                                       EmpiricCoeffs.T_r,
-                                       EmpiricCoeffs.n,
+            double eta_p = Model.eta_p(EmpiricCoeffs.ConsistencyCoefficient,
+                                       EmpiricCoeffs.ViscosityTemperatureCoefficient,
+                                       EmpiricCoeffs.CastTemperature,
+                                       EmpiricCoeffs.MaterialFlowIndex,
                                        gamma,
                                        T_p);
 

@@ -6,7 +6,7 @@ namespace App.DbEdit.Chemistry
     {
         public ChemistryDbEditController(DbEditView view, DbEditModel model) : base(view, model)
         {
-            CurrentType = typeof(ChemistryDB.Materials);
+            CurrentType = typeof(ChemistryDB.Material);
         }
     }
 }

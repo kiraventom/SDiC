@@ -13,22 +13,6 @@ namespace AuthorizationDB
 
     public class User
     {
-        public User()
-        {
-            Id = -1;
-            Login = string.Empty;
-            PasswordHash = null;
-            Level = 0;
-        }
-
-        public User(long id)
-        {
-            Id = id;
-            Login = string.Empty;
-            PasswordHash = null;
-            Level = 0;
-        }
-
         [Key]
         public long Id { get; set; }
         public string Login { get; set; }

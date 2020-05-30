@@ -19,6 +19,37 @@ namespace App.Main
             this.view.EditUsersDb += this.View_EditDb;
             this.view.EditChemistryDb += this.View_EditChemistryDb;
             this.view.Closing += this.MainView_Closing;
+            this.view.WindowLoaded += this.View_WindowLoaded;
+            this.view.MaterialChanged += this.View_MaterialChanged;
+            this.view.ParameterChanged += this.View_ParameterChanged;
+            this.view.SolveBtClicked += this.View_SolveBtClicked;
+        }
+
+        protected override View View => view;
+        protected override Model Model => model;
+
+        private readonly MainView view;
+        private readonly MainModel model;
+
+        private void View_WindowLoaded(object sender, EventArgs e)
+        {
+            view.Materials = model.GetMaterialsNames();
+        }
+
+        private void View_MaterialChanged(object sender, CustomEventArgs e)
+        {
+            var name = e.Data.ToString();
+            model.SetSelectedMaterial(name);
+        }
+
+        private void View_ParameterChanged(object sender, ParameterChangedEventArgs e)
+        {
+            model.SetParameterValue(e.ParameterType, e.ParameterName, e.Value);
+        }
+
+        private void View_SolveBtClicked(object sender, EventArgs e)
+        {
+            view.SetOutput(model.GetSolution());
         }
 
         private void View_EditChemistryDb(object sender, EventArgs e)
@@ -28,12 +59,6 @@ namespace App.Main
             dbEditController.Show();
         }
 
-        protected override View View => view as View;
-        protected override Model Model => model as Model;
-
-        private readonly MainView view;
-        private readonly MainModel model;
-
         public AuthorizationDB.User CurrentUser
         {
             set
@@ -42,11 +67,11 @@ namespace App.Main
                 {
                     case 0:
                         view.Greeting = "исследователь";
-                        view.IsEditDbBtsVisible = false;
+                        view.IsAdmin = false;
                         break;
                     case 1:
                         view.Greeting = "администратор";
-                        view.IsEditDbBtsVisible = true;
+                        view.IsAdmin = true;
                         break;
                     default:
                         throw new NotImplementedException($"Unknown user level \"{value.Level}\"");

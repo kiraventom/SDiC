@@ -8,21 +8,22 @@ namespace App.DbEdit.Users
     {
         public UsersDbEditView() : base()
         {
-            window.GenerateHashBt.Click += GenerateHashBt_Click;
+            usersWindow.GenerateHashBt.Click += GenerateHashBt_Click;
         }
 
-        protected override Window Window => window;
-        private readonly UsersDbEditWindow window = new UsersDbEditWindow();
+        protected override Window Window => usersWindow;
+        private readonly UsersDbEditWindow usersWindow = new UsersDbEditWindow();
 
         private void GenerateHashBt_Click(object sender, RoutedEventArgs e)
         {
             //TODO: Move to model
             var hash = 
-                string.IsNullOrWhiteSpace(window.HasherPB.Password) 
+                string.IsNullOrWhiteSpace(usersWindow.HasherPB.Password) 
                 ? string.Empty 
-                : Hasher.GetHash(window.HasherPB.Password);
-            TextCopy.Clipboard.SetText(hash);
-            window.ConfirmPU.IsOpen = true;
+                : Hasher.GetHash(usersWindow.HasherPB.Password);
+            var cb = new TextCopy.Clipboard();
+            cb.SetText(hash);
+            usersWindow.ConfirmPU.IsOpen = true;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using App.DbEdit.Abstraction;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace App.DbEdit.Chemistry
 {
@@ -16,17 +18,18 @@ namespace App.DbEdit.Chemistry
 
         public override dynamic GetAllTables()
         {
+            // TODO: use reflection
             List<dynamic> tables = new List<dynamic>();
-            context.Materials.Load();
-            tables.Add(context.Materials.Local.ToObservableCollection());
-            context.Parameters.Load();
-            tables.Add(context.Parameters.Local.ToObservableCollection());
-            context.ParametersTypes.Load();
-            tables.Add(context.ParametersTypes.Local.ToObservableCollection());
-            context.ParametersValues.Load();
-            tables.Add(context.ParametersValues.Local.ToObservableCollection());
-            context.Units.Load();
-            tables.Add(context.Units.Local.ToObservableCollection());
+            context.Material.Load();
+            tables.Add(context.Material.Local.ToObservableCollection());
+            context.Parameter.Load();
+            tables.Add(context.Parameter.Local.ToObservableCollection());
+            context.ParameterType.Load();
+            tables.Add(context.ParameterType.Local.ToObservableCollection());
+            context.ParameterValue.Load();
+            tables.Add(context.ParameterValue.Local.ToObservableCollection());
+            context.Unit.Load();
+            tables.Add(context.Unit.Local.ToObservableCollection());
             return tables;
         }
     }

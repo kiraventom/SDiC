@@ -7,10 +7,9 @@ namespace App.DbEdit.Chemistry
     {
         public ChemistryDbEditView() : base()
         {
-
         }
 
-        protected override Window Window => window as Window;
-        private readonly ChemistryDbEditWindow window = new ChemistryDbEditWindow();
+        protected override Window Window => chemistryWindow;
+        private readonly ChemistryDbEditWindow chemistryWindow = new ChemistryDbEditWindow();
     }
 }
