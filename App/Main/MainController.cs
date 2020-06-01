@@ -3,8 +3,13 @@ using App.Common.CustomEventArgs;
 using App.DbEdit.Abstraction;
 using App.DbEdit.Chemistry;
 using App.DbEdit.Users;
+using OxyPlot;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows.Documents;
 
 namespace App.Main
 {
@@ -26,7 +31,7 @@ namespace App.Main
         }
 
         protected override View View => view;
-        protected override Model Model => model;
+        protected override Common.Abstraction.Model Model => model;
 
         private readonly MainView view;
         private readonly MainModel model;
@@ -49,7 +54,16 @@ namespace App.Main
 
         private void View_SolveBtClicked(object sender, EventArgs e)
         {
-            view.SetOutput(model.GetSolution());
+            var solution = model.GetSolution();
+            view.SetOutputValues(solution);
+            var etaPoints = new List<DataPoint>();
+            var TPoints = new List<DataPoint>();
+            for (int i = 0; i < solution.z.Count; ++i)
+            {
+                etaPoints.Add(new DataPoint(solution.z.ElementAt(i), solution.eta.ElementAt(i)));
+                TPoints.Add(new DataPoint(solution.z.ElementAt(i), solution.T.ElementAt(i)));
+            }
+            view.SetOutputCharts(etaPoints, TPoints);
         }
 
         private void View_EditChemistryDb(object sender, EventArgs e)

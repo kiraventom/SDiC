@@ -8,6 +8,9 @@ using System.Windows.Controls;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using OxyPlot;
 
 namespace App.Main
 {
@@ -73,7 +76,7 @@ namespace App.Main
             SolveBtClicked.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetOutput(MathModel.Solution solution)
+        public void SetOutputValues(MathModel.Solution solution)
         {
             mainWindow.F_TB.Text = solution.F.ToString();
             mainWindow.Q_CH_TB.Text = solution.Q_CH.ToString();
@@ -84,6 +87,45 @@ namespace App.Main
             mainWindow.Q_TB.Text = solution.Q.ToString();
             mainWindow.T_p_TB.Text = solution.T_p.ToString();
             mainWindow.Eta_p_TB.Text = solution.eta_p.ToString();
+        }
+
+        public void SetOutputCharts(IEnumerable<DataPoint> etaValues, IEnumerable<DataPoint> TValues)
+        {
+            foreach (var axis in mainWindow.Eta_Plt.Axes)
+            {
+                switch (axis.Position)
+                {
+                    case OxyPlot.Axes.AxisPosition.Bottom:
+                    case OxyPlot.Axes.AxisPosition.Top:
+                        axis.Minimum = etaValues.Min(dp => dp.X);
+                        axis.Maximum = etaValues.Max(dp => dp.X);
+                        break;
+                    case OxyPlot.Axes.AxisPosition.Left:
+                    case OxyPlot.Axes.AxisPosition.Right:
+                        axis.Minimum = etaValues.Min(dp => dp.Y);
+                        axis.Maximum = etaValues.Max(dp => dp.Y);
+                        break;
+                }
+            }
+            foreach (var axis in mainWindow.T_Plt.Axes)
+            {
+                switch (axis.Position)
+                {
+                    case OxyPlot.Axes.AxisPosition.Bottom:
+                    case OxyPlot.Axes.AxisPosition.Top:
+                        axis.Minimum = TValues.Min(dp => dp.X);
+                        axis.Maximum = TValues.Max(dp => dp.X);
+                        break;
+                    case OxyPlot.Axes.AxisPosition.Left:
+                    case OxyPlot.Axes.AxisPosition.Right:
+                        axis.Minimum = TValues.Min(dp => dp.Y);
+                        axis.Maximum = TValues.Max(dp => dp.Y);
+                        break;
+                }
+            }
+            mainWindow.Eta_Plt.Series[0].ItemsSource = etaValues;
+            mainWindow.T_Plt.Series[0].ItemsSource = TValues;
+            mainWindow.Eta_Plt.InvalidatePlot(true);
         }
 
         private static void ShowErrorMessage()

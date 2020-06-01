@@ -93,7 +93,12 @@ namespace App.Main
             parameterProperty.SetValue(selectedParams, value);
         }
 
-        public MathModel.Solution GetSolution() => this.MathModel.Solve();
+        public MathModel.Solution GetSolution()
+        {
+            var rawSolution = this.MathModel.Solve();
+            var roundedSolution = rawSolution.RoundUp();
+            return roundedSolution;
+        }
 
         public IEnumerable<string> GetMaterialsNames()
         {
