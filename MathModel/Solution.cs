@@ -70,18 +70,20 @@ namespace MathModel
             var gamma = RoundUpNumber(this.gamma);
             var q_gamma = RoundUpNumber(this.q_gamma);
             var q_alpha = RoundUpNumber(this.q_alpha);
+            var N = (int)RoundUpNumber(this.N, true);
             var Q = RoundUpNumber(this.Q);
             var T_p = RoundUpNumber(this.T_p);
             var eta_p = RoundUpNumber(this.eta_p);
+            var z = this.z.Select(e => RoundUpNumber(e));
             var T = this.T.Select(e => RoundUpNumber(e));
             var eta = this.eta.Select(e => RoundUpNumber(e));
-            return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, this.N, Q, T_p, eta_p, this.z, T, eta);
+            return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, N, Q, T_p, eta_p, z, T, eta);
         }
 
         private double RoundUpNumber(double numberToRoundUp, bool forceInteger = false)
         {
             int digitsToLeave;
-            if (forceInteger)
+            if (numberToRoundUp == 0 || forceInteger)
             {
                 digitsToLeave = 0;
             }
