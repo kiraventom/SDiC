@@ -3,6 +3,7 @@ using App.Common.CustomEventArgs;
 using App.DbEdit.Abstraction;
 using App.DbEdit.Chemistry;
 using App.DbEdit.Users;
+using App.ResultsTable;
 using OxyPlot;
 using System;
 using System.Collections;
@@ -27,7 +28,9 @@ namespace App.Main
             this.view.WindowLoaded += this.View_WindowLoaded;
             this.view.MaterialChanged += this.View_MaterialChanged;
             this.view.ParameterChanged += this.View_ParameterChanged;
-            this.view.SolveBtClicked += this.View_SolveBtClicked;
+            this.view.SolveRequest += this.View_SolveBtClicked;
+            this.view.SaveReportRequest += this.View_SaveReportRequest;
+            this.view.ShowResultTableRequest += this.View_ShowResultTableRequest;
         }
 
         protected override View View => view;
@@ -52,6 +55,23 @@ namespace App.Main
             model.SetParameterValue(e.ParameterType, e.ParameterName, e.Value);
         }
 
+        private void View_ShowResultTableRequest(object sender, EventArgs e)
+        {
+            // TODO: consider move to model (do not forget do the same in dbedit)
+            if (this.model.Solution != null)
+            {
+                var rtView = new ResultsTableView();
+                var rtModel = new ResultsTableModel(model.Solution.z, model.Solution.T, model.Solution.eta);
+                var rtController = new ResultsTableController(rtView, rtModel);
+                rtController.ControllerClosed += (s, ea) => { };
+                rtController.Show();
+            }
+            else
+            {
+                MainView.ShowOutputErrorMessage();
+            }
+        }
+
         private void View_SolveBtClicked(object sender, EventArgs e)
         {
             var solution = model.GetSolution();
@@ -64,6 +84,28 @@ namespace App.Main
                 TPoints.Add(new DataPoint(solution.z.ElementAt(i), solution.T.ElementAt(i)));
             }
             view.SetOutputCharts(etaPoints, TPoints);
+        }
+
+        private void View_SaveReportRequest(object sender, EventArgs e)
+        {
+            if (this.model.Solution != null)
+            {
+                var sfd = new Microsoft.Win32.SaveFileDialog()
+                {
+                    Filter = "XLSX файл |*.xlsx",
+                    AddExtension = true,
+                    DefaultExt = "xlsx"
+                };
+                var result = sfd.ShowDialog();
+                if (result.HasValue && result.Value)
+                {
+                    model.SaveReport(sfd.FileName);
+                }
+            }
+            else
+            {
+                MainView.ShowOutputErrorMessage();
+            }
         }
 
         private void View_EditChemistryDb(object sender, EventArgs e)

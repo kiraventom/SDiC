@@ -7,15 +7,15 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
         mc:Ignorable="d"
-        Title="Приложение" MinHeight="475" MinWidth="840" Height="500" Width="840" WindowStartupLocation="CenterScreen">
+        Title="Приложение" MinHeight="475" MinWidth="840" Height="646" Width="890" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Button x:Name="SignOutBt" Content="Выйти из аккаунта" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="25" Width="137"/>
-        <Label x:Name="GreetingsL" Content="Value" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Width="633" Height="42"/>
-        <Button x:Name="EditUsersDbBt" Content="Открыть БД аккаунтов" HorizontalAlignment="Right" Margin="0,0,157,10" Width="142" Height="25" VerticalAlignment="Bottom"/>
-        <Button x:Name="EditChemistryDbBt" Content="Открыть БД свойств" HorizontalAlignment="Right" Margin="0,0,10,10" Width="142" Height="25" VerticalAlignment="Bottom"/>
-        <GroupBox x:Name="ScientistPanelGB" Header= "Панель исследователя" Margin="10,35,10,35">
+        <Button x:Name="SignOutBt" Content="Выйти из аккаунта" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="25" Width="137" Grid.Column="1"/>
+        <Label x:Name="GreetingsL" Content="Value" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Width="633" Height="42" Grid.ColumnSpan="2"/>
+        <Button x:Name="EditUsersDbBt" Content="Открыть БД аккаунтов" HorizontalAlignment="Right" Margin="0,0,157,10" Width="142" Height="25" VerticalAlignment="Bottom" Grid.Column="1"/>
+        <Button x:Name="EditChemistryDbBt" Content="Открыть БД свойств" HorizontalAlignment="Right" Margin="0,0,10,10" Width="142" Height="25" VerticalAlignment="Bottom" Grid.Column="1"/>
+        <GroupBox x:Name="ScientistPanelGB" Header= "Панель исследователя" Margin="3,35,10,35" Grid.Column="1">
             <Grid>
-                <GroupBox x:Name="InputGB" Header="Входные данные" Height="230" VerticalAlignment="Top" HorizontalAlignment="Left" Width="542">
+                <GroupBox x:Name="InputGB" Header="Входные данные" Height="195" VerticalAlignment="Top" HorizontalAlignment="Left" Width="464">
                     <!--
                     <StackPanel Orientation="Vertical" Margin="0, 0, 0, 15" VerticalAlignment="Bottom">
                         
@@ -48,74 +48,68 @@
                         <Button x:Name="SolveBt" Margin="-2, 15,-2, 5" Width="150" Content="Решить"/>
                     </StackPanel>
                     -->
-                    <StackPanel Orientation="Vertical" Margin="0, 10, 0, 10" VerticalAlignment="Bottom">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,25" Height="28">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Width="456">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,25" Height="28" HorizontalAlignment="Left">
                             <Label Content="Материал:" Width="110"/>
-                            <ComboBox x:Name="MaterialCB" Width="360" SelectedIndex="0"/>
+                            <ComboBox x:Name="MaterialCB" Width="334" SelectedIndex="0"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,5,5" Height="28" Tag="Geometric">
-                            <Label Content="Ширина, м:" Width="110" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,5,5" Height="28" Tag="Geometric" HorizontalAlignment="Left">
+                            <Label Content="Ширина, м:" Width="74" />
                             <xctk:DoubleUpDown FormatString="F3" x:Name="Width_DUD" Minimum="0.001" Tag="Width" Width="80"/>
-                            <Label Content="Глубина, м:" Width="60"/>
+                            <Label Content="Глубина, м:" Width="74"/>
                             <xctk:DoubleUpDown FormatString="F3" x:Name="Height_DUD" Minimum="0.001" Tag="Height" Width="80"/>
                             <Label Content="Длина, м:" Width="60"/>
                             <xctk:DoubleUpDown FormatString="F3" x:Name="Length_DUD" Minimum="0.001" Tag="Length" Width="80"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,5,5" Tag="Process">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,5,5" Tag="Process" HorizontalAlignment="Left">
                             <Label Content="Скорость крышки, м/с:" Width="140"/>
                             <xctk:DoubleUpDown FormatString="F3" x:Name="LidSpeed_DUD" Minimum="0.001" Tag="LidSpeed" Width="80"/>
-                            <Label Content="Температура крышки, C:" Width="170"/>
+                            <Label Content="Температура крышки, C:" Width="149"/>
                             <xctk:DoubleUpDown FormatString="F3" x:Name="LidTemperature_DUD" Minimum="0.001" Tag="LidTemperature" Width="80"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,5,5" Tag="Solve">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,5,5" Tag="Solve" HorizontalAlignment="Left">
                             <Label Content="Шаг расчета, м:" Width="110"/>
                             <xctk:DoubleUpDown FormatString="F3" x:Name="CalculationStep_DUD" Minimum="0.001" Tag="CalculationStep" Width="80"/>
                         </StackPanel>
                         <Button x:Name="SolveBt" Content="Рассчитать" Margin="0, 0, 0, 0" Width="85" Height="21"/>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox x:Name="OutputGB" Header="Выходные данные" Margin="0,235,0,0" HorizontalAlignment="Left" Width="430" Height="129" VerticalAlignment="Top">
+                <GroupBox x:Name="OutputGB" Header="Выходные данные" Margin="0,200,0,0" HorizontalAlignment="Left" Width="356" Height="305" VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" Margin="-2">
-                        <StackPanel Orientation="Vertical" Width="75" Margin="0,0,5,0">
-                            <Label Content="F:"/>
+                        <StackPanel Orientation="Vertical" Width="165" Margin="0,0,5,0">
+                            <TextBlock Text="Коэффициент геометрической формы канала:" TextWrapping="Wrap"/>
                             <TextBox x:Name="F_TB" IsReadOnly="True"/>
-                            <Label Content="Q_CH, м^3/с:"/>
+                            <TextBlock Text="Расход поступательного потока материала через канад, м^3/с:" TextWrapping="Wrap"/>
                             <TextBox x:Name="Q_CH_TB" IsReadOnly="True"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Width="75" Margin="0,0,5,0">
-                            <Label Content="γ, 1/с:"/>
+                            <TextBlock Text="Скорость деформации сдвига материала, 1/с:" TextWrapping="Wrap"/>
                             <TextBox x:Name="Gamma_TB" IsReadOnly="True" />
-                            <Label Content="qγ, Вт/м:"/>
+                            <TextBlock Text="Удельный тепловой поток за счёт теплообмена с крышкой канала, Вт/м:" TextWrapping="Wrap"/>
                             <TextBox x:Name="Q_Gamma_TB" IsReadOnly="True"/>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical" Width="75" Margin="0,0,5,0">
-                            <Label Content="qα, Вт/м:"/>
+                        <StackPanel Orientation="Vertical" Width="168" Margin="0,0,5,0">
+                            <TextBlock Text="Удельный тепловой поток за счёт теплообмена с крышкой канала, Вт/м:" TextWrapping="Wrap"/>
                             <TextBox x:Name="Q_Alpha_TB" IsReadOnly="True"/>
-                            <Label Content="N:"/>
+                            <TextBlock Text="Число шагов вычислений по длине канала:" TextWrapping="Wrap"/>
                             <TextBox x:Name="N_TB" IsReadOnly="True"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Width="75" Margin="0,0,5,0">
-                            <Label Content="Q, кг/ч:"/>
+                            <TextBlock Text="Производительность канала, кг/ч:" TextWrapping="Wrap"/>
                             <TextBox x:Name="Q_TB" IsReadOnly="True"/>
-                            <Label Content="Tp, С:"/>
+                            <Label Content="Температура продукта, С:"/>
                             <TextBox x:Name="T_p_TB" IsReadOnly="True"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Width="75" Margin="0,0,5,0">
-                            <Label Content="ηp, Па*с:"/>
+                            <Label Content="Вязкость продукта, Па*с:"/>
                             <TextBox x:Name="Eta_p_TB" IsReadOnly="True"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox x:Name="VisualizationGB" Header="Визуализация" Margin="547,0,0,0" HorizontalAlignment="Left" Width="236" Height="364" VerticalAlignment="Top">
+                <GroupBox x:Name="VisualizationGB" Header="Визуализация" Margin="469,0,0,0" HorizontalAlignment="Left" Width="386" Height="530" VerticalAlignment="Top">
                     <StackPanel Orientation="Vertical">
-                        <oxy:Plot x:Name="T_Plt" Height="175">
+                        <oxy:Plot x:Name="T_Plt" Height="254">
                             <oxy:Plot.Axes>
                                 <oxy:LinearAxis Position="Bottom" Title="Длина канала, м"/>
                                 <oxy:LinearAxis Position="Left" Title="Температура, C"/>
                             </oxy:Plot.Axes>
                             <oxy:LineSeries Title="T" Color="Blue"/>
                         </oxy:Plot>
-                        <oxy:Plot x:Name="Eta_Plt" Height="159">
+                        <oxy:Plot x:Name="Eta_Plt" Height="248">
                             <oxy:Plot.Axes>
                                 <oxy:LinearAxis Position="Bottom" Title="Длина канала, м"/>
                                 <oxy:LinearAxis Position="Left" Title="Вязкость, Па*с"/>
@@ -124,7 +118,15 @@
                         </oxy:Plot>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox x:Name="ReportGB" Header="Отчёты" DockPanel.Dock="Right" Margin="430,235,0,0" HorizontalAlignment="Left" Width="117" Height="129" VerticalAlignment="Top">
+                <GroupBox x:Name="ReportGB" Header="Управление" DockPanel.Dock="Right" Margin="361,200,0,0" HorizontalAlignment="Left" Width="103" Height="305" VerticalAlignment="Top">
+                    <StackPanel Orientation="Vertical">
+                        <Button x:Name="ResultsTableBt" Margin="0,0,0,10">
+                            <TextBlock Text="Таблицы с результатами" TextWrapping="Wrap" Background="Transparent" TextAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="SaveReportBt">
+                            <TextBlock Text="Сохранить отчёт" TextWrapping="Wrap" Background="Transparent" TextAlignment="Center"/>
+                        </Button>
+                    </StackPanel>
 
                 </GroupBox>
             </Grid>

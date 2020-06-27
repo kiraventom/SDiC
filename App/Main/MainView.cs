@@ -1,16 +1,17 @@
 ﻿using App.Common.Abstraction;
 using App.Common.CustomEventArgs;
+using Microsoft.Win32;
+using OxyPlot;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.Toolkit;
-using Xceed.Wpf.Toolkit.Primitives;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using OxyPlot;
 
 namespace App.Main
 {
@@ -25,21 +26,29 @@ namespace App.Main
 
             mainWindow.MaterialCB.SelectionChanged += this.MaterialCB_SelectionChanged;
 
-            var duds = mainWindow.GetType()
-                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                .Where(field => field.FieldType == typeof(DoubleUpDown))
-                .Select(field => field.GetValue(mainWindow))
-                .Cast<DoubleUpDown>();
-            foreach (var dud in duds)
+            DUDs = new ReadOnlyCollection<DoubleUpDown>( 
+                   mainWindow.GetType()
+                   .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                   .Where(field => field.FieldType == typeof(DoubleUpDown))
+                   .Select(field => field.GetValue(mainWindow))
+                   .Cast<DoubleUpDown>()
+                   .ToList());
+
+            foreach (var dud in DUDs)
             {
                 dud.ValueChanged += InputParamsDUD_ValueChanged;
             }
 
             mainWindow.SolveBt.Click += this.SolveBt_Click;
+            mainWindow.SaveReportBt.Click += this.SaveReportBt_Click;
+            mainWindow.ResultsTableBt.Click += this.ResultsTableBt_Click;
+
+            mainWindow.Loaded += this.MainWindow_Loaded;
         }
 
         protected override Window Window => mainWindow;
         private readonly MainWindow mainWindow = new MainWindow();
+        private ReadOnlyCollection<DoubleUpDown> DUDs { get; }
 
         public IEnumerable Materials { set => mainWindow.MaterialCB.ItemsSource = value; }
 
@@ -49,7 +58,9 @@ namespace App.Main
         public event EventHandler WindowLoaded;
         public event EventHandler<CustomEventArgs> MaterialChanged;
         public event EventHandler<ParameterChangedEventArgs> ParameterChanged;
-        public event EventHandler SolveBtClicked;
+        public event EventHandler SolveRequest;
+        public event EventHandler SaveReportRequest;
+        public event EventHandler ShowResultTableRequest;
 
         private void Window_Loaded(object sender, RoutedEventArgs e) => WindowLoaded.Invoke(this, e);
 
@@ -71,9 +82,36 @@ namespace App.Main
             }
         }
 
+        private void ResultsTableBt_Click(object sender, RoutedEventArgs e)
+        {
+            ShowResultTableRequest.Invoke(this, EventArgs.Empty);
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // TEMP 
+            // TODO: REMOVE
+            {
+                mainWindow.Width_DUD.Value = 0.39;
+                mainWindow.Height_DUD.Value = 0.01;
+                mainWindow.Length_DUD.Value = 10.5;
+                mainWindow.LidTemperature_DUD.Value = 180;
+                mainWindow.LidSpeed_DUD.Value = 2.1;
+                mainWindow.CalculationStep_DUD.Value = 0.005;
+            }
+        }
+
         private void SolveBt_Click(object sender, RoutedEventArgs e)
         {
-            SolveBtClicked.Invoke(this, EventArgs.Empty);
+            if (DUDs.Any(dud => dud.Value is null))
+            {
+                ShowInputErrorMessage();
+                return;
+            }
+            else
+            {
+                SolveRequest.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void SetOutputValues(MathModel.Solution solution)
@@ -126,11 +164,25 @@ namespace App.Main
             mainWindow.Eta_Plt.Series[0].ItemsSource = etaValues;
             mainWindow.T_Plt.Series[0].ItemsSource = TValues;
             mainWindow.Eta_Plt.InvalidatePlot(true);
+            mainWindow.T_Plt.InvalidatePlot(true);
         }
 
-        private static void ShowErrorMessage()
+        private void SaveReportBt_Click(object sender, RoutedEventArgs e)
+        {
+            SaveReportRequest.Invoke(this, EventArgs.Empty);
+        }
+
+        private static void ShowInputErrorMessage()
         {
             System.Windows.MessageBox.Show($"Все поля ввода должны быть заполнены",
+                                           "Ошибка!",
+                                           MessageBoxButton.OK,
+                                           MessageBoxImage.Error);
+        }
+
+        public static void ShowOutputErrorMessage()
+        {
+            System.Windows.MessageBox.Show($"Сначала произведите вычисление",
                                            "Ошибка!",
                                            MessageBoxButton.OK,
                                            MessageBoxImage.Error);

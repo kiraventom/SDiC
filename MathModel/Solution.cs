@@ -107,7 +107,7 @@ namespace MathModel
                 // and finally, by condition we need to have two digits after first signinficant figure,
                 // so we just add 2 to the result.
 
-                digitsToLeave = (int)Math.Ceiling(Math.Abs(Math.Log10(numberToRoundUp))) + 2;
+                digitsToLeave = (int)Math.Ceiling(Math.Abs(Math.Log10(Math.Abs(numberToRoundUp)))) + 2;
             }
 
             return Math.Round(numberToRoundUp, digitsToLeave);

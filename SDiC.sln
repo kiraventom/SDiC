@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "App\App.csproj", "{0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathModel", "MathModel\MathModel.csproj", "{BF0D7438-9CA0-42A2-AC95-6618F34E41E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChemistryDB", "ChemistryDB\ChemistryDB.csproj", "{9E4F046F-37DE-45BB-8DD3-FC13D26F6E79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChemistryDB", "ChemistryDB\ChemistryDB.csproj", "{9E4F046F-37DE-45BB-8DD3-FC13D26F6E79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,20 @@
+﻿<Window x:Class="App.ResultsTable.ResultsTableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:App.ResultsTable"
+        mc:Ignorable="d"
+        Title="Результаты" Height="645" Width="410" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <DataGrid x:Name="ResultsDG" AutoGenerateColumns="False" 
+                  VerticalScrollBarVisibility="Visible" IsReadOnly="True" 
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Координата по длине канала, м" Binding="{Binding _z}"/>
+                <DataGridTextColumn Header="Температура, С" Binding="{Binding _T}"/>
+                <DataGridTextColumn Header="Вязкость, Па*с" Binding="{Binding _eta}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
