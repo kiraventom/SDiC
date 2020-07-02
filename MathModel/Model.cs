@@ -1,6 +1,7 @@
 ﻿using MathModel.Parameters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MathModel
 {
@@ -126,10 +127,15 @@ namespace MathModel
             return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, N, Q, T_p, eta_p, z, T, eta);
         }
 
+        [Display(Name = "GeometricParams", Description = "Геометрические параметры канала")]
         public GeometricParams GeometricParams { get; }
+        [Display(Name = "MaterialParams", Description = "Параметры свойств материала")]
         public MaterialParams MaterialParams { get; }
+        [Display(Name = "ProcessParams", Description = "Режимные параметры процесса")]
         public ProcessParams ProcessParams { get; }
+        [Display(Name = "EmpiricCoeffs", Description = "Эмпирические коэффициенты математической модели")]
         public EmpiricCoeffs EmpiricCoeffs { get; }
+        [Display(Name = "SolveMethodParams", Description = "Параметры метода решения уравнений модели")]
         public SolveMethodParams SolveMethodParams { get; }
 
         #region Functions

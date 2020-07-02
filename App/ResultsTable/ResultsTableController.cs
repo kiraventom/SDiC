@@ -1,8 +1,6 @@
 ﻿using App.Common.Abstraction;
 using App.Common.CustomEventArgs;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace App.ResultsTable
 {

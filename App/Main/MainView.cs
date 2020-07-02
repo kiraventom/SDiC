@@ -1,12 +1,10 @@
 ﻿using App.Common.Abstraction;
 using App.Common.CustomEventArgs;
-using Microsoft.Win32;
 using OxyPlot;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -116,15 +114,15 @@ namespace App.Main
 
         public void SetOutputValues(MathModel.Solution solution)
         {
-            mainWindow.F_TB.Text = solution.F.ToString();
-            mainWindow.Q_CH_TB.Text = solution.Q_CH.ToString();
-            mainWindow.Gamma_TB.Text = solution.gamma.ToString();
-            mainWindow.Q_Gamma_TB.Text = solution.q_gamma.ToString();
-            mainWindow.Q_Alpha_TB.Text = solution.q_alpha.ToString();
-            mainWindow.N_TB.Text = solution.N.ToString();
-            mainWindow.Q_TB.Text = solution.Q.ToString();
-            mainWindow.T_p_TB.Text = solution.T_p.ToString();
-            mainWindow.Eta_p_TB.Text = solution.eta_p.ToString();
+            mainWindow.F_TB.Text = solution.ChannelGeometricShapeCoefficient.ToString();
+            mainWindow.Q_CH_TB.Text = solution.ForwardFlowMaterialConsumption.ToString();
+            mainWindow.Gamma_TB.Text = solution.MaterialShearStrainRate.ToString();
+            mainWindow.Q_Gamma_TB.Text = solution.SpecificHeatFluxForStreamViscousFriction.ToString();
+            mainWindow.Q_Alpha_TB.Text = solution.SpecificHeatFluxForChannelLidHeatExchange.ToString();
+            mainWindow.N_TB.Text = solution.CalculationStepAmount.ToString();
+            mainWindow.Q_TB.Text = solution.ChannelProductivity.ToString();
+            mainWindow.T_p_TB.Text = solution.ChannelTemperature.ToString();
+            mainWindow.Eta_p_TB.Text = solution.ProductViscosity.ToString();
         }
 
         public void SetOutputCharts(IEnumerable<DataPoint> etaValues, IEnumerable<DataPoint> TValues)

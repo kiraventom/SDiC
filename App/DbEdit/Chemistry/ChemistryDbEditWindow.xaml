@@ -5,38 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:App.DbEdit.Chemistry"
         mc:Ignorable="d"
-        Title="Редактирование БД" MinHeight="550" MinWidth="777" Height="550" Width="777" WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Title="Редактирование БД" MinHeight="550" MinWidth="777" Height="550" Width="777" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <DataGrid 
             x:Name="MaterialDG" 
-            ItemsSource="{Binding MaterialSource}" 
             CanUserReorderColumns="False" 
-            CanUserSortColumns="False" Margin="11,0,534,10" Height="189" VerticalAlignment="Bottom"/>
+            CanUserSortColumns="False" Margin="11,0,564,10" Height="189" VerticalAlignment="Bottom"/>
         <Label Content="Материалы" Margin="11,0,534,196" VerticalAlignment="Bottom" Height="29"/>
         <DataGrid 
             x:Name="ParameterDG" 
-            ItemsSource="{Binding ParameterSource}" 
             CanUserReorderColumns="False" 
-            CanUserSortColumns="False" Margin="10,41,394,251" RenderTransformOrigin="0.397,0.429"/>
+            CanUserSortColumns="False" Margin="10,41,240,251" RenderTransformOrigin="0.397,0.429"/>
         <Label Content="Параметры" Margin="10,10,394,462"/>
         <DataGrid 
             x:Name="ParameterTypeDG" 
-            ItemsSource="{Binding ParameterTypeSource}" 
             CanUserReorderColumns="False" 
-            CanUserSortColumns="False" Margin="0,0,278,10" Height="189" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="251"/>
-        <Label Content="Типы параметров" Margin="0,0,328,193" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="200"/>
+            CanUserSortColumns="False" Margin="0,0,115,10" Height="189" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="444"/>
+        <Label Content="Типы параметров" Margin="0,0,364,193" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="200"/>
         <DataGrid 
             x:Name="ParameterValueDG" 
-            ItemsSource="{Binding ParameterValueSource}" 
             CanUserReorderColumns="False" 
-            CanUserSortColumns="False" Margin="0,41,10,251" HorizontalAlignment="Right" Width="379"/>
-        <Label Content="Значения параметров" Margin="0,10,132,462" HorizontalAlignment="Right" Width="249"/>
+            CanUserSortColumns="False" Margin="0,41,10,251" HorizontalAlignment="Right" Width="225"/>
+        <Label Content="Значения параметров" Margin="0,10,10,462" HorizontalAlignment="Right" Width="225"/>
         <DataGrid 
             x:Name="UnitDG" 
-            ItemsSource="{Binding UnitSource}" 
             CanUserReorderColumns="False" 
-            CanUserSortColumns="False" Margin="0,0,10,10" Height="189" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="263"/>
-        <Label Content="Единицы измерения" Margin="0,0,17,193" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="250"/>
+            CanUserSortColumns="False" Margin="0,0,10,10" Height="189" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100"/>
+        <TextBlock Text="Единицы измерения" TextWrapping="Wrap" Margin="0,0,17,199" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="93"/>
     </Grid>
 </Window>

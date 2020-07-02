@@ -2,7 +2,6 @@
 using App.Common.CustomEventArgs;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -67,7 +66,7 @@ namespace App.DbEdit.Abstraction
             AddItemAttempt.Invoke(sender, e);
         }
 
-        private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        public virtual void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
             if (e.PropertyName.Equals("id", StringComparison.OrdinalIgnoreCase))
             {

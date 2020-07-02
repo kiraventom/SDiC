@@ -6,11 +6,9 @@ using App.DbEdit.Users;
 using App.ResultsTable;
 using OxyPlot;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Documents;
 
 namespace App.Main
 {
@@ -28,7 +26,7 @@ namespace App.Main
             this.view.WindowLoaded += this.View_WindowLoaded;
             this.view.MaterialChanged += this.View_MaterialChanged;
             this.view.ParameterChanged += this.View_ParameterChanged;
-            this.view.SolveRequest += this.View_SolveBtClicked;
+            this.view.SolveRequest += this.View_SolveRequest;
             this.view.SaveReportRequest += this.View_SaveReportRequest;
             this.view.ShowResultTableRequest += this.View_ShowResultTableRequest;
         }
@@ -61,7 +59,7 @@ namespace App.Main
             if (this.model.Solution != null)
             {
                 var rtView = new ResultsTableView();
-                var rtModel = new ResultsTableModel(model.Solution.z, model.Solution.T, model.Solution.eta);
+                var rtModel = new ResultsTableModel(model.Solution.CoordinateByChannelLength, model.Solution.Temperature, model.Solution.Viscosity);
                 var rtController = new ResultsTableController(rtView, rtModel);
                 rtController.ControllerClosed += (s, ea) => { };
                 rtController.Show();
@@ -72,16 +70,16 @@ namespace App.Main
             }
         }
 
-        private void View_SolveBtClicked(object sender, EventArgs e)
+        private void View_SolveRequest(object sender, EventArgs e)
         {
             var solution = model.GetSolution();
             view.SetOutputValues(solution);
             var etaPoints = new List<DataPoint>();
             var TPoints = new List<DataPoint>();
-            for (int i = 0; i < solution.z.Count; ++i)
+            for (int i = 0; i < solution.CoordinateByChannelLength.Count; ++i)
             {
-                etaPoints.Add(new DataPoint(solution.z.ElementAt(i), solution.eta.ElementAt(i)));
-                TPoints.Add(new DataPoint(solution.z.ElementAt(i), solution.T.ElementAt(i)));
+                etaPoints.Add(new DataPoint(solution.CoordinateByChannelLength.ElementAt(i), solution.Viscosity.ElementAt(i)));
+                TPoints.Add(new DataPoint(solution.CoordinateByChannelLength.ElementAt(i), solution.Temperature.ElementAt(i)));
             }
             view.SetOutputCharts(etaPoints, TPoints);
         }

@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace App.Main
 {
@@ -73,11 +74,7 @@ namespace App.Main
         public void SetSelectedMaterial(string name)
         {
             var material = Context.Material.AsEnumerable().FirstOrDefault(m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (material is null)
-            {
-                throw new NoNullAllowedException($"Material with name \"{name}\" was not found");
-            }
-            SelectedMaterial = material;
+            SelectedMaterial = material ?? throw new NoNullAllowedException($"Material with name \"{name}\" was not found");
         }
 
         public void SetParameterValue(string parameterType, string parameterName, double value)
@@ -108,90 +105,116 @@ namespace App.Main
             return from material in materials select material.Name;
         }
 
-        public void SaveReport(string filename)
+        public void SaveReport(string filename) // TODO: fix all of this mess
         {
+            static string getDescription(PropertyInfo prop)
+            {
+                return prop.CustomAttributes.First().NamedArguments.First(arg => arg.MemberName == "Description").TypedValue.Value.ToString();
+            }
+
+            File.Delete(filename);
+
             var outputProperties = Solution.GetType().GetProperties();
             var outputValuesProperties = outputProperties.Where(p => p.PropertyType == typeof(int) || p.PropertyType == typeof(double));
             var outputRangedProperties = outputProperties.Where(p => p.PropertyType == typeof(IReadOnlyCollection<double>));
-            var outputValues = outputValuesProperties.Select(p => new { p.Name, Value = p.GetValue(Solution) });
-            var outputRanges = outputRangedProperties.Select(p => new { p.Name, Values = (IReadOnlyCollection<double>)p.GetValue(Solution) });
+            var outputValues = outputValuesProperties.Select(p => new { Name = getDescription(p), Value = p.GetValue(Solution) });
+            var outputRanges = outputRangedProperties.Select(p => new { Name = getDescription(p), Values = (IReadOnlyCollection<double>)p.GetValue(Solution) });
 
-            var mathModelParams = MathModel.GetType().GetProperties().Select(p => p.GetValue(MathModel));
-            var mathModelParamsProperties = new List<IEnumerable<(string, object)>>();
+            var mathModelParams = MathModel.GetType().GetProperties().Select(p => new { Name = getDescription(p), Value = p.GetValue(MathModel) });
+            var inputParamsTypes = new List<(string name, IEnumerable<(string name, object value)> value)>();
             foreach (var param in mathModelParams)
             {
-                mathModelParamsProperties.Add(param.GetType().GetProperties().Select(p => (p.Name, p.GetValue(param) )));
+                inputParamsTypes.Add((param.Name, param.Value.GetType().GetProperties().Select(prop => (getDescription(prop), prop.GetValue(param.Value)))));
             }
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (var package = new ExcelPackage(new FileInfo(filename)))
+            using var package = new ExcelPackage(new FileInfo(filename));
+            using var workbook = package.Workbook;
+
+            ExcelWorksheet worksheet; 
+            if (!workbook.Worksheets.Any(sh => sh.Name == "Отчёт о работе программы"))
             {
-                using (var workbook = package.Workbook)
+                worksheet = workbook.Worksheets.Add("Отчёт о работе программы");
+            }
+            else
+            {
+                worksheet = workbook.Worksheets.First(sh => sh.Name == "Отчёт о работе программы");
+            }
+
+            worksheet.SetValue(1, 1, "Входные данные");
+            worksheet.Cells[1, 1].Style.Font.Bold = true;
+            worksheet.SetValue(2, 1, "Тип материала");
+            worksheet.Cells[2, 1].Style.Font.Bold = true;
+            worksheet.SetValue(2, 2, SelectedMaterial.Name);
+            worksheet.Cells[2, 2].Style.Font.Bold = true;
+
+            int currentRow = 3;
+            foreach (var inputParamsType in inputParamsTypes)
+            {
+                worksheet.SetValue(currentRow++, 1, inputParamsType.name);
+                worksheet.Cells[currentRow - 1, 1].Style.Font.Bold = true;
+                foreach (var inputParam in inputParamsType.value)
                 {
-                    ExcelWorksheet worksheet;
-                    if (!workbook.Worksheets.Any(sh => sh.Name == "Отчёт о работе программы"))
-                    {
-                        worksheet = workbook.Worksheets.Add("Отчёт о работе программы");
-                    }
-                    else
-                    {
-                        worksheet = workbook.Worksheets.First(sh => sh.Name == "Отчёт о работе программы");
-                    }
-                    
-                    worksheet.SetValue(1, 1, "Входные данные");
-                    worksheet.SetValue(2, 1, SelectedMaterial.Name);
-                    for (int row = 0; row < mathModelParamsProperties.Count; ++row)
-                    {
-                        (string name, object value)[] mathModelParamProperty = mathModelParamsProperties[row].ToArray();
-                        for (int col = 0; col < mathModelParamProperty.Length; ++col)
-                        {
-                            worksheet.SetValue((row + 1) * 2 + 1, col + 1, mathModelParamProperty[col].name);
-                            worksheet.SetValue((row + 1) * 2 + 2, col + 1, mathModelParamProperty[col].value);
-                            worksheet.Column(col + 1).Width = 20;
-                        }
-                    }
-                    worksheet.Column(1).Width = 30;
-
-                    worksheet.SetValue(14, 1, "Выходные данные");
-                    for (int col = 0; col < outputValues.Count(); ++col)
-                    {
-                        worksheet.SetValue(15, col + 1, outputValues.ElementAt(col).Name);
-                        worksheet.SetValue(16, col + 1, outputValues.ElementAt(col).Value);
-                    }
-
-                    for (int col = 0; col < outputRanges.Count(); ++col)
-                    {
-                        worksheet.SetValue(18, col + 1, outputRanges.ElementAt(col).Name);
-                        for (int row = 0; row < outputRanges.ElementAt(col).Values.Count; ++row)
-                        {
-                            worksheet.SetValue(19 + row, col + 1, outputRanges.ElementAt(col).Values.ElementAt(row));
-                        }
-                    }
-
-                    var etaChart = worksheet.Drawings.AddLineChart("EtaChart", eLineChartType.LineMarkers);
-                    int lastRow = 19 + outputRanges.First().Values.Count - 1;
-                    etaChart.SetPosition(18, 0, 4, 0);
-                    etaChart.SetSize(600, 300);
-                    etaChart.Fill.Color = Color.White;
-                    etaChart.YAxis.MinValue = outputRanges.ElementAt(1).Values.Min();
-                    etaChart.YAxis.MaxValue = outputRanges.ElementAt(1).Values.Max();
-                    var etaSeries = etaChart.Series.Add($"B19:B{lastRow}", $"A19:A{lastRow}");
-                    etaSeries.Marker.Size = 2;
-                    etaSeries.Header = "η";
-
-                    var TChart = worksheet.Drawings.AddLineChart("TChart", eLineChartType.LineMarkers);
-                    TChart.SetPosition(35, 0, 4, 0);
-                    TChart.SetSize(600, 300);
-                    TChart.Fill.Color = Color.White;
-                    TChart.YAxis.MinValue = outputRanges.ElementAt(2).Values.Min();
-                    TChart.YAxis.MaxValue = outputRanges.ElementAt(2).Values.Max();
-                    var TSeries = TChart.Series.Add($"C19:C{lastRow}", $"A19:A{lastRow}");
-                    TSeries.Marker.Size = 2;
-                    TSeries.Header = "T";
-
-                    package.Save();
+                    worksheet.SetValue(currentRow, 1, inputParam.name);
+                    worksheet.SetValue(currentRow++, 2, inputParam.value);
                 }
             }
+            worksheet.Column(1).Width = 70;
+            worksheet.Column(2).Width = 20;
+
+            ++currentRow;
+            worksheet.SetValue(currentRow++, 1, "Выходные данные");
+            worksheet.Cells[currentRow - 1, 1].Style.Font.Bold = true;
+
+            foreach (var outputValue in outputValues)
+            {
+                worksheet.SetValue(currentRow, 1, outputValue.Name);
+                worksheet.SetValue(currentRow++, 2, outputValue.Value);
+            }
+            var chartsHeaderRow = ++currentRow;
+
+            worksheet.Column(4).Width = 40;
+            worksheet.Column(5).Width = 20;
+            worksheet.Column(6).Width = 20;
+
+            for (int i = 0; i < outputRanges.Count(); ++i)
+            {
+                var col = i + 4;
+                var outputRange = outputRanges.ElementAt(i);
+                currentRow = 2;
+                worksheet.SetValue(1, col, outputRange.Name);
+                worksheet.Cells[1, col].Style.Font.Bold = true;
+
+                foreach (var value in outputRange.Values)
+                {
+                    worksheet.SetValue(currentRow++, col, value);
+                }
+            }
+
+            using var etaChart = worksheet.Drawings.AddLineChart("EtaChart", eLineChartType.LineMarkers);
+            int lastRow = currentRow;
+            etaChart.SetSize(400, 300);
+            etaChart.SetPosition(chartsHeaderRow + 1, 0, 0, 0);
+            etaChart.Fill.Color = Color.White;
+            etaChart.YAxis.MinValue = outputRanges.ElementAt(1).Values.Min();
+            etaChart.YAxis.MaxValue = outputRanges.ElementAt(1).Values.Max();
+            var etaSeries = etaChart.Series.Add($"E{chartsHeaderRow + 1}:E{lastRow}", $"D{chartsHeaderRow + 1}:D{lastRow}");
+            etaSeries.Marker.Size = 2;
+            etaSeries.Header = "Вязкость";
+
+            using var TChart = worksheet.Drawings.AddLineChart("TChart", eLineChartType.LineMarkers);
+            TChart.SetSize(400, 300);
+            TChart.SetPosition(chartsHeaderRow + 20, 0, 0, 0);
+            TChart.Fill.Color = Color.White;
+            TChart.YAxis.MinValue = outputRanges.ElementAt(2).Values.Min();
+            TChart.YAxis.MaxValue = outputRanges.ElementAt(2).Values.Max();
+            var TSeries = TChart.Series.Add($"F{chartsHeaderRow + 1}:F{lastRow}", $"D{chartsHeaderRow + 1}:D{lastRow}");
+            TSeries.Marker.Size = 2;
+            TSeries.Header = "Температура";
+
+            package.Save();
+
+            worksheet.Dispose();
         }
 
         ~MainModel() => Context.Dispose();

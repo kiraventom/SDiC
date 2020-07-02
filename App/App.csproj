@@ -35,8 +35,4 @@
     <ProjectReference Include="..\MathModel\MathModel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\ScientistPanel\" />
-  </ItemGroup>
-
 </Project>

@@ -1,8 +1,6 @@
 ﻿using App.DbEdit.Abstraction;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace App.DbEdit.Chemistry
 {
@@ -20,16 +18,22 @@ namespace App.DbEdit.Chemistry
         {
             // TODO: use reflection
             List<dynamic> tables = new List<dynamic>();
+
             context.Material.Load();
             tables.Add(context.Material.Local.ToObservableCollection());
+
             context.Parameter.Load();
             tables.Add(context.Parameter.Local.ToObservableCollection());
+
             context.ParameterType.Load();
             tables.Add(context.ParameterType.Local.ToObservableCollection());
+
             context.ParameterValue.Load();
             tables.Add(context.ParameterValue.Local.ToObservableCollection());
+
             context.Unit.Load();
             tables.Add(context.Unit.Local.ToObservableCollection());
+
             return tables;
         }
     }

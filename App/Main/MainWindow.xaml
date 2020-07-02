@@ -16,38 +16,6 @@
         <GroupBox x:Name="ScientistPanelGB" Header= "Панель исследователя" Margin="3,35,10,35" Grid.Column="1">
             <Grid>
                 <GroupBox x:Name="InputGB" Header="Входные данные" Height="195" VerticalAlignment="Top" HorizontalAlignment="Left" Width="464">
-                    <!--
-                    <StackPanel Orientation="Vertical" Margin="0, 0, 0, 15" VerticalAlignment="Bottom">
-                        
-                        <StackPanel Orientation="Horizontal" Height="86">
-                            <StackPanel Orientation="Vertical" Margin="0,0,15,0">
-                                <Label Height="25" Content="Геометрический параметр:" Margin="0,0,0,5"/>
-                                <Label Height="25" Content="Режимный параметр процесса:" Margin="0,0,0,5"/>
-                                <Label Height="25" Content="Параметр метода решения:" Margin="0,0,0,5"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Vertical" Width="150" Margin="0,0,15,0">
-                                <ComboBox Height="25" x:Name="GeometricParamsCB" Margin="0,0,0,5" SelectedIndex="0" Tag="Geometric">
-                                    <ComboBoxItem Content="Ширина" Tag="Width"/>
-                                    <ComboBoxItem Content="Глубина" Tag="Height"/>
-                                    <ComboBoxItem Content="Длина" Tag="Length"/>
-                                </ComboBox>
-                                <ComboBox Height="25" x:Name="ProcessParamsCB" Margin="0,0,0,5" SelectedIndex="0" Tag="Process">
-                                    <ComboBoxItem Content="Скорость крышки" Tag="LidSpeed"/>
-                                    <ComboBoxItem Content="Температура крышки" Tag="LidTemperature"/>
-                                </ComboBox>
-                                <ComboBox Height="25" x:Name="SolveMethodParamsCB" Margin="0,0,0,5" SelectedIndex="0" Tag="Solve">
-                                    <ComboBoxItem Content="Шаг расчёта по длине канала" Tag="CalculationStep"/>
-                                </ComboBox>
-                            </StackPanel>
-                            <StackPanel Orientation="Vertical" Width="112">
-                                <xctk:DoubleUpDown Height="25" x:Name="GeometricInputDUD" Margin="0,0,0,5" FormatString="F3" Minimum="0.001" Tag="Geometric"/>
-                                <xctk:DoubleUpDown Height="25" x:Name="ProcessInputDUD" Margin="0,0,0,5" FormatString="F3" Minimum="0.001" Tag="Process"/>
-                                <xctk:DoubleUpDown Height="25" x:Name="SolveMethodInputDUD" Margin="0,0,0,5" FormatString="F3" Minimum="0.001" Tag="Solve"/>
-                            </StackPanel>
-                        </StackPanel>
-                        <Button x:Name="SolveBt" Margin="-2, 15,-2, 5" Width="150" Content="Решить"/>
-                    </StackPanel>
-                    -->
                     <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Width="456">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,25" Height="28" HorizontalAlignment="Left">
                             <Label Content="Материал:" Width="110"/>

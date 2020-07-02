@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace MathModel
@@ -9,74 +10,94 @@ namespace MathModel
         internal Solution(double F, double Q_CH, double gamma, double q_gamma, double q_alpha, int N, double Q, double T_p, double eta_p,
                         IEnumerable<double> z, IEnumerable<double> T, IEnumerable<double> eta)
         {
-            this.F = F;
-            this.Q_CH = Q_CH;
-            this.gamma = gamma;
-            this.q_gamma = q_gamma;
-            this.q_alpha = q_alpha;
-            this.N = N;
-            this.Q = Q;
-            this.T_p = T_p;
-            this.eta_p = eta_p;
-            this.z = z.ToList().AsReadOnly();
-            this.T = T.ToList().AsReadOnly();
-            this.eta = eta.ToList().AsReadOnly();
+            this.ChannelGeometricShapeCoefficient = F;
+            this.ForwardFlowMaterialConsumption = Q_CH;
+            this.MaterialShearStrainRate = gamma;
+            this.SpecificHeatFluxForStreamViscousFriction = q_gamma;
+            this.SpecificHeatFluxForChannelLidHeatExchange = q_alpha;
+            this.CalculationStepAmount = N;
+            this.ChannelProductivity = Q;
+            this.ChannelTemperature = T_p;
+            this.ProductViscosity = eta_p;
+            this.CoordinateByChannelLength = z.ToList().AsReadOnly();
+            this.Temperature = T.ToList().AsReadOnly();
+            this.Viscosity = eta.ToList().AsReadOnly();
         }
         /// <summary>
         /// Коэффициент геометрической формы канала
         /// </summary>
-        public double F { get; }
+        [Display(Name="ChannelGeometricShapeCoefficient", Description = "Коэффициент геометрической формы канала")]
+        public double ChannelGeometricShapeCoefficient { get; }
         /// <summary>
         /// Расход поступательного потока материала через канал
         /// </summary>
-        public double Q_CH { get; }
+        [Display(Name= "ForwardFlowMaterialConsumption", Description = "Расход поступательного потока материала через канал, м^3/с")]
+        public double ForwardFlowMaterialConsumption { get; }
         /// <summary>
         /// Cкорость деформации сдвига материала
         /// </summary>
-        public double gamma { get; }
+        [Display(Name = "MaterialShearStrainRate", Description = "Cкорость деформации сдвига материала, 1/с")]
+        public double MaterialShearStrainRate { get; }
         /// <summary>
         /// Удельный тепловой поток за счёт вязкого трения в потоке
         /// </summary>
-        public double q_gamma { get; }
+        [Display(Name = "SpecificHeatFluxForStreamViscousFriction", Description = "Удельный тепловой поток за счёт вязкого трения в потоке, Вт/м")]
+        public double SpecificHeatFluxForStreamViscousFriction { get; }
         /// <summary>
         /// Удельный тепловой поток за счёт теплообмена с крышкой канала
         /// </summary>
-        public double q_alpha { get; }
+        [Display(Name = "SpecificHeatFluxForChannelLidHeatExchange", Description = "Удельный тепловой поток за счёт теплообмена с крышкой канала, Вт/м")]
+        public double SpecificHeatFluxForChannelLidHeatExchange { get; }
         /// <summary>
         /// Число шагов вычислений по длине канала
         /// </summary>
-        public int N { get; }
+        [Display(Name = "CalculationStepAmount", Description = "Число шагов вычислений по длине канала")]
+        public int CalculationStepAmount { get; }
         /// <summary>
-        /// Производительность канала Q
+        /// Производительность канала
         /// </summary>
-        public double Q { get; }
+        [Display(Name = "ChannelProductivity", Description = "Производительность канала, кг/ч")]
+        public double ChannelProductivity { get; }
         /// <summary>
         /// Температура продукта
         /// </summary>
-        public double T_p { get; }
+        [Display(Name = "ChannelTemperature", Description = "Температура продукта, С")]
+        public double ChannelTemperature { get; }
         /// <summary>
         /// Вязкость продукта
         /// </summary>
-        public double eta_p { get; }
-
-        public IReadOnlyCollection<double> z { get; }
-        public IReadOnlyCollection<double> T { get; }
-        public IReadOnlyCollection<double> eta { get; }
+        [Display(Name = "ProductViscosity", Description = "Вязкость продукта, Па*с")]
+        public double ProductViscosity { get; }
+        /// <summary>
+        /// Координата по длине продукта
+        /// </summary>
+        [Display(Name = "CoordinateByChannelLength", Description = "Координата по длине продукта, м")]
+        public IReadOnlyCollection<double> CoordinateByChannelLength { get; }
+        /// <summary>
+        /// Температура
+        /// </summary>
+        [Display(Name = "Temperature", Description = "Температура, С")]
+        public IReadOnlyCollection<double> Temperature { get; }
+        /// <summary>
+        /// Вязкость
+        /// </summary>
+        [Display(Name = "Viscosity", Description = "Вязкость, Па*с")]
+        public IReadOnlyCollection<double> Viscosity { get; }
 
         public Solution RoundUp()
         {
-            var F = RoundUpNumber(this.F);
-            var Q_CH = RoundUpNumber(this.Q_CH);
-            var gamma = RoundUpNumber(this.gamma);
-            var q_gamma = RoundUpNumber(this.q_gamma);
-            var q_alpha = RoundUpNumber(this.q_alpha);
-            var N = (int)RoundUpNumber(this.N, true);
-            var Q = RoundUpNumber(this.Q);
-            var T_p = RoundUpNumber(this.T_p);
-            var eta_p = RoundUpNumber(this.eta_p);
-            var z = this.z.Select(e => RoundUpNumber(e));
-            var T = this.T.Select(e => RoundUpNumber(e));
-            var eta = this.eta.Select(e => RoundUpNumber(e));
+            var F = RoundUpNumber(this.ChannelGeometricShapeCoefficient);
+            var Q_CH = RoundUpNumber(this.ForwardFlowMaterialConsumption);
+            var gamma = RoundUpNumber(this.MaterialShearStrainRate);
+            var q_gamma = RoundUpNumber(this.SpecificHeatFluxForStreamViscousFriction);
+            var q_alpha = RoundUpNumber(this.SpecificHeatFluxForChannelLidHeatExchange);
+            var N = (int)RoundUpNumber(this.CalculationStepAmount, true);
+            var Q = RoundUpNumber(this.ChannelProductivity);
+            var T_p = RoundUpNumber(this.ChannelTemperature);
+            var eta_p = RoundUpNumber(this.ProductViscosity);
+            var z = this.CoordinateByChannelLength.Select(e => RoundUpNumber(e));
+            var T = this.Temperature.Select(e => RoundUpNumber(e));
+            var eta = this.Viscosity.Select(e => RoundUpNumber(e));
             return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, N, Q, T_p, eta_p, z, T, eta);
         }
 

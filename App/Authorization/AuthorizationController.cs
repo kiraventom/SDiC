@@ -1,9 +1,6 @@
-﻿using App.Authorization;
-using App.Common;
-using App.Common.Abstraction;
+﻿using App.Common.Abstraction;
 using App.Common.CustomEventArgs;
 using System;
-using System.Windows;
 
 namespace App.Authorization
 {
