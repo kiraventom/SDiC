@@ -91,46 +91,50 @@ namespace MathModel
             var gamma = RoundUpNumber(this.MaterialShearStrainRate);
             var q_gamma = RoundUpNumber(this.SpecificHeatFluxForStreamViscousFriction);
             var q_alpha = RoundUpNumber(this.SpecificHeatFluxForChannelLidHeatExchange);
-            var N = (int)RoundUpNumber(this.CalculationStepAmount, true);
+            var N = (int)RoundUpNumber(this.CalculationStepAmount, 0);
             var Q = RoundUpNumber(this.ChannelProductivity);
             var T_p = RoundUpNumber(this.ChannelTemperature);
             var eta_p = RoundUpNumber(this.ProductViscosity);
-            var z = this.CoordinateByChannelLength.Select(e => RoundUpNumber(e));
+            var z = this.CoordinateByChannelLength.Select(e => RoundUpNumber(e, 3));
             var T = this.Temperature.Select(e => RoundUpNumber(e));
             var eta = this.Viscosity.Select(e => RoundUpNumber(e));
             return new Solution(F, Q_CH, gamma, q_gamma, q_alpha, N, Q, T_p, eta_p, z, T, eta);
         }
 
-        private double RoundUpNumber(double numberToRoundUp, bool forceInteger = false)
+        private double RoundUpNumber(double numberToRoundUp, int digitsToLeave = -1)
         {
-            int digitsToLeave;
-            if (numberToRoundUp == 0 || forceInteger)
+            if (digitsToLeave == -1)
             {
-                digitsToLeave = 0;
-            }
-            else
-            if (numberToRoundUp >= 10)
-            {
-                digitsToLeave = 1;
-            }
-            else
-            {
-                // we need to round number such way that it will have two digits after first significant figure.
-                // example: for 0.523139 should be rounded up to 0.523; 0.000412355 to 0.000412; etc.
-                // how do we calculate the number of digits?
-                //
-                // first things first, we need to calculate the one-based index of first significant figure after point.
-                // for numbers like 0.1, 0.00001 it's pretty easy - just take absolute value of log10.
-                // example: abs(log10(0.1)) = 1; abs(log10(0.00001)) = 5.
-                //
-                // second, for numbers like 0.523139 or 0.000412355 we'll also need to take their ceiling.
-                // example: abs(log10(0.523139)) ~ 0.28, ceiling(0.28) = 1;
-                // example: abs(log10(0.000412355)) ~ 3.38, ceiling(3.38) = 4.
-                // 
-                // and finally, by condition we need to have two digits after first signinficant figure,
-                // so we just add 2 to the result.
+                if (numberToRoundUp == 0)
+                {
+                    return numberToRoundUp;
+                }
+                else
+                {
+                    if (numberToRoundUp >= 10)
+                    {
+                        digitsToLeave = 1;
+                    }
+                    else
+                    {
+                        // we need to round number such way that it will have two digits after first significant figure.
+                        // example: for 0.523139 should be rounded up to 0.523; 0.000412355 to 0.000412; etc.
+                        // how do we calculate the number of digits?
+                        //
+                        // first things first, we need to calculate the one-based index of first significant figure after point.
+                        // for numbers like 0.1, 0.00001 it's pretty easy - just take absolute value of log10.
+                        // example: abs(log10(0.1)) = 1; abs(log10(0.00001)) = 5.
+                        //
+                        // second, for numbers like 0.523139 or 0.000412355 we'll also need to take their ceiling.
+                        // example: abs(log10(0.523139)) ~ 0.28, ceiling(0.28) = 1;
+                        // example: abs(log10(0.000412355)) ~ 3.38, ceiling(3.38) = 4.
+                        // 
+                        // and finally, by condition we need to have two digits after first signinficant figure,
+                        // so we just add 2 to the result.
 
-                digitsToLeave = (int)Math.Ceiling(Math.Abs(Math.Log10(Math.Abs(numberToRoundUp)))) + 2;
+                        digitsToLeave = (int)Math.Ceiling(Math.Abs(Math.Log10(Math.Abs(numberToRoundUp)))) + 2;
+                    }
+                }
             }
 
             return Math.Round(numberToRoundUp, digitsToLeave);

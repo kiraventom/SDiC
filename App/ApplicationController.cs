@@ -52,8 +52,8 @@ namespace App
             }
         }
 
-        readonly AuthorizationController AuthController;
-        readonly MainController MainController;
+        private AuthorizationController AuthController { get; }
+        private MainController MainController { get; }
 
         public void Run()
         {

@@ -8,7 +8,9 @@ using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 
 namespace App.Main
 {
@@ -72,6 +74,11 @@ namespace App.Main
 
         private void View_SolveRequest(object sender, EventArgs e)
         {
+            // TEMP
+            // TODO: MOVE STOPWATCH TO MODEL
+            Stopwatch s = new Stopwatch();
+            s.Start();
+
             var solution = model.GetSolution();
             view.SetOutputValues(solution);
             var etaPoints = new List<DataPoint>();
@@ -82,7 +89,11 @@ namespace App.Main
                 TPoints.Add(new DataPoint(solution.CoordinateByChannelLength.ElementAt(i), solution.Temperature.ElementAt(i)));
             }
             view.SetOutputCharts(etaPoints, TPoints);
+
+            s.Stop();
+            view.SetCalculationTime(s.ElapsedMilliseconds);
         }
+
 
         private void View_SaveReportRequest(object sender, EventArgs e)
         {

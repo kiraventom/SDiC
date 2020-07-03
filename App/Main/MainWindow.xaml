@@ -42,7 +42,7 @@
                         <Button x:Name="SolveBt" Content="Рассчитать" Margin="0, 0, 0, 0" Width="85" Height="21"/>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox x:Name="OutputGB" Header="Выходные данные" Margin="0,200,0,0" HorizontalAlignment="Left" Width="356" Height="305" VerticalAlignment="Top">
+                <GroupBox x:Name="OutputGB" Header="Выходные данные" Margin="0,200,0,0" HorizontalAlignment="Left" Width="356" Height="327" VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" Margin="-2">
                         <StackPanel Orientation="Vertical" Width="165" Margin="0,0,5,0">
                             <TextBlock Text="Коэффициент геометрической формы канала:" TextWrapping="Wrap"/>
@@ -53,6 +53,8 @@
                             <TextBox x:Name="Gamma_TB" IsReadOnly="True" />
                             <TextBlock Text="Удельный тепловой поток за счёт теплообмена с крышкой канала, Вт/м:" TextWrapping="Wrap"/>
                             <TextBox x:Name="Q_Gamma_TB" IsReadOnly="True"/>
+                            <TextBlock Text="Время расчёта и визуализации, мс:" TextWrapping="Wrap"/>
+                            <TextBox x:Name="CalculationTime_TB" IsReadOnly="True"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Width="168" Margin="0,0,5,0">
                             <TextBlock Text="Удельный тепловой поток за счёт теплообмена с крышкой канала, Вт/м:" TextWrapping="Wrap"/>
@@ -86,7 +88,7 @@
                         </oxy:Plot>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox x:Name="ReportGB" Header="Управление" DockPanel.Dock="Right" Margin="361,200,0,0" HorizontalAlignment="Left" Width="103" Height="305" VerticalAlignment="Top">
+                <GroupBox x:Name="ReportGB" Header="Управление" DockPanel.Dock="Right" Margin="361,200,0,0" HorizontalAlignment="Left" Width="103" Height="327" VerticalAlignment="Top">
                     <StackPanel Orientation="Vertical">
                         <Button x:Name="ResultsTableBt" Margin="0,0,0,10">
                             <TextBlock Text="Таблицы с результатами" TextWrapping="Wrap" Background="Transparent" TextAlignment="Center"/>

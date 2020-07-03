@@ -132,7 +132,7 @@ namespace App.Main
             using var workbook = package.Workbook;
 
             ExcelWorksheet worksheet; 
-            if (!workbook.Worksheets.Any(sh => sh.Name == "Отчёт о работе программы"))
+            if (workbook.Worksheets.All(sh => sh.Name != "Отчёт о работе программы"))
             {
                 worksheet = workbook.Worksheets.Add("Отчёт о работе программы");
             }
@@ -191,26 +191,26 @@ namespace App.Main
                 }
             }
 
-            using var etaChart = worksheet.Drawings.AddLineChart("EtaChart", eLineChartType.LineMarkers);
-            int lastRow = currentRow;
-            etaChart.SetSize(400, 300);
-            etaChart.SetPosition(chartsHeaderRow + 1, 0, 0, 0);
-            etaChart.Fill.Color = Color.White;
-            etaChart.YAxis.MinValue = outputRanges.ElementAt(1).Values.Min();
-            etaChart.YAxis.MaxValue = outputRanges.ElementAt(1).Values.Max();
-            var etaSeries = etaChart.Series.Add($"E{chartsHeaderRow + 1}:E{lastRow}", $"D{chartsHeaderRow + 1}:D{lastRow}");
-            etaSeries.Marker.Size = 2;
-            etaSeries.Header = "Вязкость";
+            //using var etaChart = worksheet.Drawings.AddLineChart("EtaChart", eLineChartType.LineMarkers);
+            //int lastRow = currentRow;
+            //etaChart.SetSize(400, 300);
+            //etaChart.SetPosition(chartsHeaderRow + 1, 0, 0, 0);
+            //etaChart.Fill.Color = Color.White;
+            //etaChart.YAxis.MinValue = outputRanges.ElementAt(1).Values.Min();
+            //etaChart.YAxis.MaxValue = outputRanges.ElementAt(1).Values.Max();
+            //var etaSeries = etaChart.Series.Add($"E{chartsHeaderRow + 1}:E{lastRow}", $"D{chartsHeaderRow + 1}:D{lastRow}");
+            //etaSeries.Marker.Size = 2;
+            //etaSeries.Header = "Вязкость";
 
-            using var TChart = worksheet.Drawings.AddLineChart("TChart", eLineChartType.LineMarkers);
-            TChart.SetSize(400, 300);
-            TChart.SetPosition(chartsHeaderRow + 20, 0, 0, 0);
-            TChart.Fill.Color = Color.White;
-            TChart.YAxis.MinValue = outputRanges.ElementAt(2).Values.Min();
-            TChart.YAxis.MaxValue = outputRanges.ElementAt(2).Values.Max();
-            var TSeries = TChart.Series.Add($"F{chartsHeaderRow + 1}:F{lastRow}", $"D{chartsHeaderRow + 1}:D{lastRow}");
-            TSeries.Marker.Size = 2;
-            TSeries.Header = "Температура";
+            //using var TChart = worksheet.Drawings.AddLineChart("TChart", eLineChartType.LineMarkers);
+            //TChart.SetSize(400, 300);
+            //TChart.SetPosition(chartsHeaderRow + 20, 0, 0, 0);
+            //TChart.Fill.Color = Color.White;
+            //TChart.YAxis.MinValue = outputRanges.ElementAt(2).Values.Min();
+            //TChart.YAxis.MaxValue = outputRanges.ElementAt(2).Values.Max();
+            //var TSeries = TChart.Series.Add($"F{chartsHeaderRow + 1}:F{lastRow}", $"D{chartsHeaderRow + 1}:D{lastRow}");
+            //TSeries.Marker.Size = 2;
+            //TSeries.Header = "Температура";
 
             package.Save();
 

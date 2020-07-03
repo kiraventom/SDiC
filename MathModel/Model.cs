@@ -57,9 +57,6 @@ namespace MathModel
                 return null;
             }
 
-            List<double> z = new List<double>();
-            List<double> T = new List<double>();
-            List<double> eta = new List<double>();
 
             double F = Model.F(GeometricParams.Height, GeometricParams.Width);
             double Q_CH = Model.Q_CH(GeometricParams.Height,
@@ -79,7 +76,11 @@ namespace MathModel
                                            EmpiricCoeffs.HeatTransferCoefficient);
             int N = Model.N(GeometricParams.Length, SolveMethodParams.CalculationStep);
 
-            for (int i = 0; i < N; ++i)
+            double[] z = new double[N + 1];
+            double[] T = new double[N + 1];
+            double[] eta = new double[N + 1];
+
+            for (int i = 0; i <= N; ++i)
             {
                 double z_i = Model.z_i(i, SolveMethodParams.CalculationStep);
                 double T_i = Model.T_i(GeometricParams.Width,
@@ -99,9 +100,9 @@ namespace MathModel
                                            EmpiricCoeffs.MaterialFlowIndex,
                                            gamma,
                                            T_i);
-                z.Add(z_i);
-                T.Add(T_i);
-                eta.Add(eta_i);
+                z[i] = z_i;
+                T[i] = T_i;
+                eta[i] = eta_i;
             }
 
             double Q = Model.Q(MaterialParams.Density, Q_CH);

@@ -16,8 +16,8 @@ namespace App.Authorization
             this.view.Closing += AuthorizationView_Closing;
         }
 
-        protected override View View => view as View;
-        protected override Model Model => model as Model;
+        protected override View View => view;
+        protected override Model Model => model;
 
         private readonly AuthorizationView view;
         private readonly AuthorizationModel model;

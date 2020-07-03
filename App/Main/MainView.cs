@@ -99,6 +99,10 @@ namespace App.Main
             }
         }
 
+        // TEMP
+        // TODO: FIX
+        public void SetCalculationTime(long ms) => mainWindow.CalculationTime_TB.Text = ms.ToString();
+
         private void SolveBt_Click(object sender, RoutedEventArgs e)
         {
             if (DUDs.Any(dud => dud.Value is null))
