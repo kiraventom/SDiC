@@ -2,4 +2,5 @@
 
 Software Development in Chemistry / Разработка программных систем для исследований в химии
 
-Технологии: C#, WPF, EF Core, SQLite
+Study project / Учебный проект
+C#, WPF, EF Core, SQLite
